@@ -30,7 +30,7 @@
 
 - name: Create Logstash configuration files.
   template:
-    src: "templates/{{ item }}.j2"
+    src: "{{ item }}.j2"
     dest: "/etc/logstash/conf.d/{{ item }}"
     owner: root
     group: root
