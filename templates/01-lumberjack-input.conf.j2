@@ -1,0 +1,10 @@
+input {
+  tcp {
+    port => {{ logstash_listen_port_tcp }}
+    type => syslog
+  }
+  udp {
+    port => {{ logstash_listen_port_udp }}
+    type => syslog
+  }
+}
