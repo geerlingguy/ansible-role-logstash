@@ -20,11 +20,11 @@
 - name: Install Logstash.
   apt: pkg=logstash state=present
 
-# TODO: Fix this so it's idempotent.
 - name: Add Logstash user to adm group (Debian).
   user:
     name: logstash
-    groups: "logstash,adm"
+    group: logstash
+    groups: adm
   when: ansible_os_family == "Debian"
   notify: restart logstash
 
