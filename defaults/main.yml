@@ -3,7 +3,7 @@ logstash_listen_port_tcp: 5000
 logstash_listen_port_udp: 5000
 logstash_elasticsearch_host: localhost
 
-logstash_add_local_syslog: true
+logstash_monitor_local_syslog: true
 
 logstash_ssl_dir: /etc/pki/logstash
 logstash_ssl_certificate_file: logstash-forwarder-example.crt

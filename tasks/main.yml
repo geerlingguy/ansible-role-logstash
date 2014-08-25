@@ -49,7 +49,7 @@
     owner: root
     group: root
     mode: 644
-  when: logstash_add_local_syslog
+  when: logstash_monitor_local_syslog
   notify: restart logstash
 
 - name: Warn user if using insecure SSL key pair.
