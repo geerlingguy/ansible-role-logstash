@@ -37,7 +37,6 @@
     mode: 644
   with_items:
     - 01-lumberjack-input.conf
-    - 02-local-syslog-input.conf
     - 10-syslog.conf
     - 30-lumberjack-output.conf
   notify: restart logstash
