@@ -25,6 +25,12 @@ The TCP and UDP ports over which logstash will listen for syslog messages.
 
 The host on which Elasticsearch resides.
 
+    logstash_ssl_dir: /etc/pki/logstash
+    logstash_ssl_certificate_file: logstash-forwarder-example.crt
+    logstash_ssl_key_file: logstash-forwarder-example.key
+
+SSL configuration for Logstash to accept requests from logstash-forwarder running on remote hosts. **Security note**: On production or public-facing (e.g. any non-test) servers, you should create your own key/certificate pair and use that instead of the included default! You can use OpenSSL to create the key and certificate files, with a command like the following: `sudo openssl req -x509 -batch -nodes -days 3650 -newkey rsa:2048 -keyout logstash-forwarder.key -out logstash-forwarder.crt`.
+
 ## Dependencies
 
   - geerlingguy.elasticsearch
