@@ -64,3 +64,6 @@
     - "{{ logstash_ssl_key_file }}"
     - "{{ logstash_ssl_certificate_file }}"
   notify: restart logstash
+
+- name: Ensure Logstash is started and enabled on boot.
+  service: name=logstash state=started enabled=yes
