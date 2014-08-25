@@ -42,6 +42,16 @@
     - 30-lumberjack-output.conf
   notify: restart logstash
 
+- name: Create Logstash configuration file for local syslog.
+  template:
+    src: 02-local-syslog-input.conf.j2
+    dest: /etc/logstash/conf.d/02-local-syslog-input.conf
+    owner: root
+    group: root
+    mode: 644
+  when: logstash_add_local_syslog
+  notify: restart logstash
+
 - name: Warn user if using insecure SSL key pair.
   debug:
     msg: >
