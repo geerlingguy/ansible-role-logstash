@@ -8,7 +8,7 @@
   copy:
     src: logstash.repo
     dest: /etc/yum.repos.d/logstash.repo
-    mode: 644
+    mode: 0644
 
 - name: Install Logstash.
   yum: pkg=logstash state=installed

@@ -11,7 +11,7 @@
     dest: "/etc/logstash/conf.d/{{ item }}"
     owner: root
     group: root
-    mode: 644
+    mode: 0644
   with_items:
     - 01-lumberjack-input.conf
     - 10-syslog.conf
@@ -24,7 +24,7 @@
     dest: /etc/logstash/conf.d/02-local-syslog-input.conf
     owner: root
     group: root
-    mode: 644
+    mode: 0644
   when: logstash_monitor_local_syslog
   notify: restart logstash
 
@@ -45,7 +45,7 @@
   copy:
     src: "{{ item }}"
     dest: "{{ logstash_ssl_dir }}/{{ item }}"
-    mode: 644
+    mode: 0644
   with_items:
     - "{{ logstash_ssl_key_file }}"
     - "{{ logstash_ssl_certificate_file }}"
