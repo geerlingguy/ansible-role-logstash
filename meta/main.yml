@@ -4,7 +4,7 @@ dependencies:
 
 galaxy_info:
   author: geerlingguy
-  description: Logstash for Debian/Ubuntu.
+  description: Logstash for Linux.
   company: "Midwestern Mac, LLC"
   license: "license (BSD, MIT)"
   min_ansible_version: 1.4
