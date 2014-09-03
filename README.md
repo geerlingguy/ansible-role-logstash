@@ -4,6 +4,8 @@
 
 An Ansible Role that installs Logstash on RedHat/CentOS Debian/Ubuntu.
 
+Note that this role installs a syslog grok pattern by default; if you want to add more filters, please add them inside the `/etc/logstash/conf.d/` directory. As an example, you could create a file named `11-nginx-access.conf` with the appropriate grok filter and restart logstash to start using it. Test your grok regex using the [Grok Debugger](http://grokdebug.herokuapp.com/).
+
 ## Requirements
 
 Though other methods are possible, this role is made to work with Elasticsearch as a backend for storing log messages.
