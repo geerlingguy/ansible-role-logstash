@@ -1,0 +1,108 @@
+input {
+  lumberjack {
+    port => {{ logstash_listen_port_lumberjack }}
+    type => "syslog"
+    ssl_certificate => "{{ logstash_ssl_dir }}/{{ logstash_ssl_certificate_file }}"
+    ssl_key => "{{ logstash_ssl_dir }}/{{ logstash_ssl_key_file }}"
+  }
+
+}
+
+#filter {
+#  # Lumberjack sends custom fields. We're going to use those for multi-user
+#  # Kibana access control.
+#  mutate {
+#    add_tag => [ "%{customer}" ]
+#  }
+#  mutate {
+#    remove => [ "customer" ]
+#  }
+#
+#  # strip the syslog PRI part and create facility and severity fields.
+#  # the original syslog message is saved in field %{syslog_raw_message}.
+#  # the extracted PRI is available in the %{syslog_pri} field.
+#  #
+#  # You get %{syslog_facility_code} and %{syslog_severity_code} fields.
+#  # You also get %{syslog_facility} and %{syslog_severity} fields if the
+#  # use_labels option is set True (the default) on syslog_pri filter.
+#  grok {
+#    type => "syslog"
+#    pattern => [ "<%{POSINT:syslog_pri}>%{SPACE}%{GREEDYDATA:message_remainder}" ]
+#    add_tag => "got_syslog_pri"
+#    add_field => [ "syslog_raw_message", "%{@message}" ]
+#  }
+#  syslog_pri {
+#    type => "syslog"
+#    tags => [ "got_syslog_pri" ]
+#  }
+#  mutate {
+#    type => "syslog"
+#    tags => [ "got_syslog_pri" ]
+#    replace => [ "@message", "%{message_remainder}" ]
+#  }
+#  mutate {
+#    # XXX must not be combined with replacement which uses same field
+#    type => "syslog"
+#    tags => [ "got_syslog_pri" ]
+#    remove => [ "message_remainder" ]
+#  }
+#
+#  # strip the syslog timestamp and force event timestamp to be the same.
+#  # the original string is saved in field %{syslog_timestamp}.
+#  # the original logstash input timestamp is saved in field %{received_at}.
+#  grok {
+#    type => "syslog"
+#    pattern => [ "%{SYSLOGTIMESTAMP:syslog_timestamp}%{SPACE}%{GREEDYDATA:message_remainder}" ]
+#    add_tag => "got_syslog_timestamp"
+#    add_field => [ "received_at", "%{@timestamp}" ]
+#  }
+#  mutate {
+#    type => "syslog"
+#    tags => [ "got_syslog_timestamp" ]
+#    replace => [ "@message", "%{message_remainder}" ]
+#  }
+#  mutate {
+#    # XXX must not be combined with replacement which uses same field
+#    type => "syslog"
+#    tags => [ "got_syslog_timestamp" ]
+#    remove => [ "message_remainder" ]
+#  }
+#  date {
+#    type => "syslog"
+#    tags => [ "got_syslog_timestamp" ]
+#    # season to taste for your own syslog format(s)
+#    syslog_timestamp => [ "MMM  d HH:mm:ss", "MMM dd HH:mm:ss", "ISO8601" ]
+#  }
+#
+#  # strip the host field from the syslog line.
+#  # the extracted host field becomes the logstash %{@source_host} metadata
+#  # and is also available in the filed %{syslog_hostname}.
+#  # the original logstash source_host is saved in field %{logstash_source}.
+#  grok {
+#    type => "syslog"
+#    pattern => [ "%{SYSLOGHOST:syslog_hostname}%{SPACE}%{GREEDYDATA:message_remainder}" ]
+#    add_tag => [ "got_syslog_host", "%{syslog_hostname}" ]
+#    add_field => [ "logstash_source", "%{@source_host}" ]
+#  }
+#  mutate {
+#    type => "syslog"
+#    tags => [ "got_syslog_host" ]
+#    replace => [ "@source_host", "%{syslog_hostname}" ]
+#    replace => [ "@message", "%{message_remainder}" ]
+#  }
+#  mutate {
+#    # XXX must not be combined with replacement which uses same field
+#    type => "syslog"
+#    tags => [ "got_syslog_host" ]
+#    remove => [ "message_remainder" ]
+#  }
+#
+#  grok {
+#    type => "nginx_access"
+#    pattern => "%{COMBINEDAPACHELOG}"
+#  }
+#  grok {
+#    type => "varnishncsa"
+#    pattern => "%{COMBINEDAPACHELOG}"
+#  }
+#}

@@ -42,6 +42,37 @@
   when: logstash_monitor_local_syslog
   notify: restart logstash
 
+- name: Create Logstash configuration file for jenkins syslog.
+  template:
+    src: 03-local-jenkins-input.conf.j2
+    dest: /etc/logstash/conf.d/03-local-jenkins-input.conf
+    owner: root
+    group: root
+    mode: 0644
+  when: logstash_monitor_local_syslog
+  notify: restart logstash
+
+- name: Create Logstash configuration file for apache syslog.
+  template:
+    src: 04-local-apache-input.conf.j2
+    dest: /etc/logstash/conf.d/04-local-apache-input.conf
+    owner: root
+    group: root
+    mode: 0644
+  when: logstash_monitor_local_syslog
+  notify: restart logstash
+  
+- name: Configure Logstash init.
+  lineinfile: >
+    dest=/etc/init.d/logstash
+    regexp="{{ item.regexp }}"
+    line="{{ item.line }}"
+    state=present
+  with_items:
+    - { regexp: '^LS_NICE=\d*', line: 'LS_NICE={{ logstash_nice }}' }
+    - { regexp: '^LS_HEAP_SIZE="\d*."', line: 'LS_HEAP_SIZE="{{ logstash_heap }}"' }
+  notify: restart logstash
+
 - name: Warn user if using insecure SSL key pair.
   debug:
     msg: >
