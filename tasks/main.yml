@@ -49,7 +49,7 @@
     owner: root
     group: root
     mode: 0644
-  when: logstash_monitor_local_syslog
+  when: logstash_monitor_jenkins_enabled
   notify: restart logstash
 
 - name: Create Logstash configuration file for apache syslog.
@@ -59,7 +59,7 @@
     owner: root
     group: root
     mode: 0644
-  when: logstash_monitor_local_syslog
+  when: logstash_monitor_apache_enabled
   notify: restart logstash
   
 - name: Configure Logstash init.
