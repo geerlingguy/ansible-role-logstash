@@ -15,6 +15,6 @@ logstash_ssl_key_file: logstash-forwarder-example.key
 logstash_enabled_on_boot: yes
 
 logstash_nice: "19"
-logstash_heap: "50m"
+logstash_heap: "500m"
 
 
