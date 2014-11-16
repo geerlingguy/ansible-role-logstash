@@ -1,0 +1,42 @@
+#{{ ansible_managed }}
+input {
+  file {
+    path => "/var/log/supervisor/*.log"
+  }
+  
+  file {
+    path => "/var/log/zabbix-agent/*.log"
+  }  
+    
+  file {
+    path => "/var/log/zabbix/*.log"
+  }  
+  
+  file {
+    path => "/var/log/tomcat7/*.log"
+    exclude => ["*.gz"]    
+  }    
+
+  file {
+    path => "/var/log/rabbitmq/*.log"
+    exclude => ["*.gz"]    
+  }    
+
+  file {
+    path => "/var/log/postgresql/*.log"
+    exclude => ["*.gz"]    
+  }    
+
+  file {
+    path => "/var/log/mysql/*.log"
+  }  
+  
+  file {
+    path => "/var/log/mon/*.log"
+  }  
+    
+  file {
+    path => "/var/log/mail.log"
+  }      
+     
+}
