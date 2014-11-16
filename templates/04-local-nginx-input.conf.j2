@@ -1,15 +1,14 @@
 #{{ ansible_managed }}
 input {
   file {
-    path => "/var/log/apache2/*.log"
-    #start_position => beginning
+    path => "/var/log/nginx/*.log"
     exclude => ["*.gz"]
   }
 }
 
 filter {
   if [path] =~ "access" {
-    mutate { replace => { type => "apache_access" } }
+    mutate { replace => { type => "nginx_access" } }
     grok {
       match => { "message" => "%{COMBINEDAPACHELOG}" }
     }
@@ -17,7 +16,7 @@ filter {
       match => [ "timestamp" , "dd/MMM/yyyy:HH:mm:ss Z" ]
     }
   } else if [path] =~ "error" {
-    mutate { replace => { type => "apache_error" } }
+    mutate { replace => { type => "nginx_error" } }
   } else {
     mutate { replace => { type => "random_logs" } }
   }

@@ -1,0 +1,12 @@
+#{{ ansible_managed }}
+input {
+  file {
+    path => "/home/nexus/nexus/logs/*.log"
+  }
+  
+  file {
+    path => "/home/nexus/sonatype-work/nexus/logs/*.log"
+    exclude => ["*.gz"]
+  }  
+  
+}
