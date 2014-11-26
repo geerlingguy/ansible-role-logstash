@@ -17,3 +17,6 @@ logstash_ssl_certificate_file: logstash-forwarder-example.crt
 logstash_ssl_key_file: logstash-forwarder-example.key
 logstash_nice: "19"
 logstash_heap: "500m"
+
+jenkins_home: "/var/lib/jenkins"
+
