@@ -38,5 +38,13 @@ input {
   file {
     path => "/var/log/mail.log"
   }      
-     
+
+  file {
+    path => "/var/log/upstart/*.log"
+  }      
+               
+  file {
+    path => "/var/log/docker*.log"
+  }     
+  
 }

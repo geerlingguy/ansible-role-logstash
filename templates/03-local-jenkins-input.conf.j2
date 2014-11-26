@@ -6,4 +6,14 @@ input {
     type => "jenkins"
   }
 
+  file {
+    path => "{{ jenkins_home_dir }}/*.log"
+    type => "jenkins"
+  }
+  
+  file {
+    path => "{{ jenkins_home_dir }}/logs/slaves/*/*.log"
+    type => "jenkins"
+  }
+    
 }
