@@ -7,12 +7,12 @@ input {
   }
 
   file {
-    path => "{{ jenkins_home_dir }}/*.log"
+    path => "{{ jenkins_home }}/*.log"
     type => "jenkins"
   }
   
   file {
-    path => "{{ jenkins_home_dir }}/logs/slaves/*/*.log"
+    path => "{{ jenkins_home }}/logs/slaves/*/*.log"
     type => "jenkins"
   }
     
