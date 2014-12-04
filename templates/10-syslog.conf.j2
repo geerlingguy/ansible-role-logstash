@@ -1,5 +1,8 @@
 filter {
   if [type] == "syslog" {
+    if [message] =~ /last message repeated [0-9]+ times/ {
+      drop { }
+    }
     grok {
       match => { "message" => "%{SYSLOGTIMESTAMP:syslog_timestamp} %{SYSLOGHOST:syslog_hostname} %{DATA:syslog_program}(?:\[%{POSINT:syslog_pid}\])?: %{GREEDYDATA:syslog_message}" }
       add_field => [ "received_at", "%{@timestamp}" ]
