@@ -3,9 +3,20 @@ logstash_listen_port_lumberjack: 5000
 
 logstash_elasticsearch_host: localhost
 
-logstash_local_syslog_path: /var/log/syslog
+logstash_local_syslog_path: "/var/log/syslog"
 logstash_monitor_local_syslog: true
+logstash_monitor_jenkins_enabled: no
+logstash_monitor_nexus_enabled: no
+logstash_monitor_apache_enabled: no
+logstash_monitor_nginx_enabled: no
+logstash_monitor_elasticsearch_enabled: no
+logstash_monitor_miscellaneous_enabled: no
 
 logstash_ssl_dir: /etc/pki/logstash
 logstash_ssl_certificate_file: logstash-forwarder-example.crt
 logstash_ssl_key_file: logstash-forwarder-example.key
+logstash_nice: "19"
+logstash_heap: "500m"
+
+jenkins_home: "/var/lib/jenkins"
+

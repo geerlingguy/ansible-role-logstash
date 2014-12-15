@@ -28,6 +28,77 @@
   when: logstash_monitor_local_syslog
   notify: restart logstash
 
+- name: Create Logstash configuration file for jenkins syslog.
+  template:
+    src: 03-local-jenkins-input.conf.j2
+    dest: /etc/logstash/conf.d/03-local-jenkins-input.conf
+    owner: root
+    group: root
+    mode: 0644
+  when: logstash_monitor_jenkins_enabled
+  notify: restart logstash
+
+- name: Create Logstash configuration file for nexus yslog.
+  template:
+    src: 03-local-nexus-input.conf.j2
+    dest: /etc/logstash/conf.d/03-local-nexus-input.conf
+    owner: root
+    group: root
+    mode: 0644
+  when: logstash_monitor_nexus_enabled
+  notify: restart logstash
+  
+- name: Create Logstash configuration file for apache syslog.
+  template:
+    src: 04-local-apache-input.conf.j2
+    dest: /etc/logstash/conf.d/04-local-apache-input.conf
+    owner: root
+    group: root
+    mode: 0644
+  when: logstash_monitor_apache_enabled
+  notify: restart logstash
+  
+- name: Create Logstash configuration file for nginx syslog.
+  template:
+    src: 04-local-nginx-input.conf.j2
+    dest: /etc/logstash/conf.d/04-local-nginx-input.conf
+    owner: root
+    group: root
+    mode: 0644
+  when: logstash_monitor_nginx_enabled
+  notify: restart logstash
+  
+- name: Create Logstash configuration file for elasticsearch syslog.
+  template:
+    src: 05-local-elasticsearch-input.conf.j2
+    dest: /etc/logstash/conf.d/05-local-elasticsearch-input.conf
+    owner: root
+    group: root
+    mode: 0644
+  when: logstash_monitor_elasticsearch_enabled
+  notify: restart logstash
+    
+- name: Create Logstash configuration file for miscellaneous syslog.
+  template:
+    src: 05-local-miscellaneous-input.conf.j2
+    dest: /etc/logstash/conf.d/05-local-miscellaneous-input.conf
+    owner: root
+    group: root
+    mode: 0644
+  when: logstash_monitor_miscellaneous_enabled
+  notify: restart logstash
+    
+- name: Configure Logstash init.
+  lineinfile: >
+    dest=/etc/init.d/logstash
+    regexp="{{ item.regexp }}"
+    line="{{ item.line }}"
+    state=present
+  with_items:
+    - { regexp: '^LS_NICE=\d*', line: 'LS_NICE={{ logstash_nice }}' }
+    - { regexp: '^LS_HEAP_SIZE="\d*."', line: 'LS_HEAP_SIZE="{{ logstash_heap }}"' }
+  notify: restart logstash
+
 - name: Warn user if using insecure SSL key pair.
   debug:
     msg: >

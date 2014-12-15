@@ -1,0 +1,19 @@
+#{{ ansible_managed }}
+input {
+
+  file {
+    path => "/var/log/jenkins/jenkins.log"
+    type => "jenkins"
+  }
+
+  file {
+    path => "{{ jenkins_home }}/*.log"
+    type => "jenkins"
+  }
+  
+  file {
+    path => "{{ jenkins_home }}/logs/slaves/*/*.log"
+    type => "jenkins"
+  }
+    
+}
