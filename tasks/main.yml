@@ -26,8 +26,8 @@
     mode: 0644
   with_items:
     - 10-syslog.conf
-    - 11-nginx-access.conf
-    - 12-apache-access.conf
+    - 11-nginx.conf
+    - 12-apache.conf
     - 14-solr.conf
     - 15-drupal.conf
   notify: restart logstash
