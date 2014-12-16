@@ -14,8 +14,22 @@
     mode: 0644
   with_items:
     - 01-lumberjack-input.conf
-    - 10-syslog.conf
     - 30-lumberjack-output.conf
+  notify: restart logstash
+
+- name: Create Logstash filters.
+  copy:
+    src: "{{ item }}"
+    dest: "/etc/logstash/conf.d/{{ item }}"
+    owner: root
+    group: root
+    mode: 0644
+  with_items:
+    - 10-syslog.conf
+    - 11-nginx-access.conf
+    - 12-apache-access.conf
+    - 14-solr.conf
+    - 15-drupal.conf
   notify: restart logstash
 
 - name: Create Logstash configuration file for local syslog.
