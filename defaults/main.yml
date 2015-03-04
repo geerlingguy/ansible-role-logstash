@@ -22,4 +22,4 @@ logstash_nice: "19"
 logstash_heap: "500m"
 
 jenkins_home: "/var/lib/jenkins"
-
+kgr_home: "/thomsonreuters/home/kgr"
