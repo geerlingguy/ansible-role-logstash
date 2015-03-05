@@ -1,0 +1,102 @@
+#{{ ansible_managed }}
+#https://gist.github.com/evilchili/7046534
+input {
+
+  file {
+    type => "jenkins-server"
+    path => "/var/log/jenkins/jenkins.log"
+    start_position => "beginning"
+  }
+
+}
+
+# The first filter munges the logs into discrete events.
+filter {
+
+  if [type] == "jenkins-server" {
+
+    # set all messages from the jenkins log as type 'jenkins' and add the @message field.
+    mutate {
+        add_field => ["@message_type", "jenkins"]
+        add_field => ["@message", "%{message}"]
+    }
+
+    # Any line that does not begin with a date is deemed to be a continuation of the previous
+    # line. This has the effect of delimiting the entire log file on timestamps.
+    multiline {
+        pattern => "^%{MONTH} %{MONTHDAY}, %{YEAR} %{TIME} (AM|PM)"
+        negate => true
+        what => "previous"
+    }
+      
+  }
+
+  # ...other event types get processed here...
+
+}
+
+# now that we have possibly-multiline events, we can clean them up.
+# We do this in a new filter so that we only process complete events instead of individual lines.
+filter {
+    
+    # munge the possibly-multiline messages into a single string
+    mutate {
+      join => ["@message", "\n"]
+    }
+    
+    # split @message into __date and __msg, and overwrite the @timestamp value.
+    grok {
+      match => [ "@message", "^(?<__date>%{MONTH} %{MONTHDAY}, %{YEAR} %{TIME} (AM|PM)) (?<__msg>.+)" ]
+    }
+    
+	#date {
+	#	match => [ "__date", "MMM dd, YYYY HH:mm:ss a" ]
+	##	timezone => "America/Los_Angeles"
+	#}
+
+	# ...now some patterns to categorize specific event types...
+
+	# parse build completion messages, adding the jenkins_* fields and the 'build' tag
+	#grok {
+	#	match => [ "@message", "(?<jenkins_job>\S+) #(?<jenkins_build_number>\d+) (?<__msg>.+): (?<jenkins_build_status>\w+)" ]
+	#	tag_on_failure => []
+	#	overwrite => true
+	#	add_tag => ['build']
+	#}
+    #
+	## tag messages that come from the perforce SCM plugin (and associated classes)
+	#grok {
+	#	match => [ "@message", "\.perforce\."]
+	#	tag_on_failure => []
+	#	add_tag => ['p4-plugin']
+	#}
+    #
+	## ...other grok patterns go here...
+    #
+	## if we have extracted a short message string, replace @message with it now
+	#if [__msg] {
+	#	mutate {
+	#		replace => ["@message","%{__msg}"]
+	#	}
+	#}
+    #
+	## convert @message back into an array of lines
+	#mutate {
+	#	split => ["@message", "\n"]
+	#}
+}
+
+# Lastly, clean-up temporary fields and unwanted tags.
+#filter {
+#    mutate {
+#        remove_field => [
+#            "message",
+#            "__msg",
+#            "__date"
+#        ]
+#        remove_tag => [
+#            "multiline",
+#            "_grokparsefailure"
+#        ]
+#    }
+#}

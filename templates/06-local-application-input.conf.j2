@@ -1,0 +1,76 @@
+#{{ ansible_managed }}
+input {
+
+  file {
+    type => "log4j"
+    path => "{{ kgr_home }}/log/KGRWebServer.log"
+  }
+
+  file {
+    type => "log4j"
+    path => "{{ kgr_home }}/log/RTM.log"
+  }
+  
+  file {
+    type => "log4j"
+    path => "{{ kgr_home }}/log/kgrAdapterLogger.log"
+  }  
+  
+  file {
+    type => "log4j"
+    path => "{{ kgr_home }}/log/RiskInsight.log"
+  }    
+  
+#log4cxx KGRAdapter_stdout.log
+
+#  file {
+#    type => "log4j"  
+#    path => "{{ kgr_home }}/dist/log/*.log"
+#  }
+
+#  file {
+#    path => "{{ kgr_home }}/dist/3rdparty/J2EE/tomcat_dist/logs/*.log"
+#    exclude => ["*.gz"]
+#  }
+#
+#  file {
+#    path => "{{ kgr_home }}/data/J2EE/TomcatConfigs/logs/*.log"
+#    exclude => ["*.gz"]
+#  }
+
+}
+
+filter {
+  if [type] == "log4j" {
+   multiline {
+     type => "log4j"
+     pattern => "^\\s"
+     what => "previous"
+   }
+#   mutate { replace => { type => "application" } }  
+#    add_field => [ "level", "%{@level}" ]
+
+    ## Filters below here should be consistent for all log formats.
+    ## Remove DEBUG logs to reduce the amount of data that needs to be processed.
+    #if [loglevel] == "DEBUG" {
+    #  drop {}
+    #}
+  
+  }
+}
+
+#filter {
+#  grok {
+##    type => "log4j"
+#    add_tag => [ "ApplicationName" ]         
+#    add_tag => [ "level_%{level}" ]
+#    match => [ "message", "%{TIMESTAMP_ISO8601:timestamp} %{LOGLEVEL:level} %{TIMESTAMP_ISO8601:timestamp}%{SPACE}%{LOGLEVEL:level}%{SPACE}%{SYSLOG5424SD}%{SPACE}%{DATA:service}%{SPACE}%{JAVACLASS}%{GREEDYDATA:message}" ]
+##    match => [ "message", "%{TIMESTAMP_ISO8601:logdate}%{SPACE}\[%{LOGLEVEL:level}%{SPACE}]%{SPACE}\[%{DATA:user}]%{SPACE}\[%{DATA:thread}]%{SPACE}\[%{DATA:classname}]%{SPACE}%{GREEDYDATA:message}" ]
+#  }
+#  
+##  date {
+##     logdate => "yyyy-MM-dd HH:mm:ss,SSS"
+##  }
+#    
+#  mutate { replace => { type => "application" } }  
+#}

@@ -1,0 +1,29 @@
+#{{ ansible_managed }}
+input {
+
+  log4j {
+    mode => server
+    host => "0.0.0.0"
+    port => [log4j_port]
+    type => "log4j"
+  }
+  
+}
+
+filter {
+  if [type] == "log4j" {
+    grok {
+      type => "log4j"
+      add_tag => [ "ApplicationName" ]
+      match => [ "message", "%{TIMESTAMP_ISO8601:timestamp}  %{LOGLEVEL:level}" ]
+    }
+    mutate {
+      add_field => [ "log4j_ip", "%{@source_host}" ]
+    }
+    mutate {
+      gsub => ["log4j_ip", ":.*$", ""]
+    }  
+#  mutate { replace => { type => "application" } }    
+  }
+
+}
