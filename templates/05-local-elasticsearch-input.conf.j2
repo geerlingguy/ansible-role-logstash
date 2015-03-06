@@ -1,6 +1,8 @@
 #{{ ansible_managed }}
 input {
+
   file {
+    type => "elasticsearch"  
     path => "/var/log/elasticsearch/*.log"
   }
 

@@ -5,6 +5,9 @@
 - include: setup-Debian.yml
   when: ansible_os_family == 'Debian'
 
+#TODO clean /etc/logstash/conf.d/
+#sudo rm -f /etc/logstash/conf.d/*
+
 - name: Create Logstash configuration files.
   template:
     src: "{{ item }}.j2"
@@ -42,6 +45,16 @@
   when: logstash_monitor_local_syslog
   notify: restart logstash
 
+- name: Create Logstash configuration file for jenkins-server syslog.
+  template:
+    src: 03-local-jenkins-server-input.conf.j2
+    dest: /etc/logstash/conf.d/03-local-jenkins-server-input.conf
+    owner: root
+    group: root
+    mode: 0644
+  when: logstash_monitor_jenkins_enabled
+  notify: restart logstash
+
 - name: Create Logstash configuration file for jenkins syslog.
   template:
     src: 03-local-jenkins-input.conf.j2
@@ -51,7 +64,7 @@
     mode: 0644
   when: logstash_monitor_jenkins_enabled
   notify: restart logstash
-
+  
 - name: Create Logstash configuration file for nexus yslog.
   template:
     src: 03-local-nexus-input.conf.j2
@@ -92,7 +105,7 @@
   when: logstash_monitor_elasticsearch_enabled
   notify: restart logstash
     
-- name: Create Logstash configuration file for miscellaneous syslog.
+- name: Create Logstash configuration file for miscellaneous log.
   template:
     src: 05-local-miscellaneous-input.conf.j2
     dest: /etc/logstash/conf.d/05-local-miscellaneous-input.conf
@@ -101,7 +114,27 @@
     mode: 0644
   when: logstash_monitor_miscellaneous_enabled
   notify: restart logstash
-    
+
+- name: Create Logstash configuration file for application log.
+  template:
+    src: 06-local-application-input.conf.j2
+    dest: /etc/logstash/conf.d/06-local-application-input.conf
+    owner: root
+    group: root
+    mode: 0644
+  when: logstash_monitor_application_enabled
+  notify: restart logstash
+
+- name: Create Logstash configuration file for log4j log.
+  template:
+    src: 07-local-log4j-input.conf.j2
+    dest: /etc/logstash/conf.d/07-local-log4j-input.conf
+    owner: root
+    group: root
+    mode: 0644
+  when: logstash_monitor_log4j_enabled
+  notify: restart logstash
+  
 - name: Configure Logstash init.
   lineinfile: >
     dest=/etc/init.d/logstash
@@ -135,6 +168,13 @@
     - "{{ logstash_ssl_key_file }}"
     - "{{ logstash_ssl_certificate_file }}"
   notify: restart logstash
+  
+#sudo chmod 755 /var/log/upstart  
+#sudo chmod -R 755 /var/log/*
+#sudo chmod 755 /var/log/upstart/*
+#sudo chmod 755 /var/log/zabbix/zabbix_agentd.log
+#sudo chmod 777 /var/log/upstart/docker.log
+#sudo find /var/log/ -type f -name '*\.log' | xargs sudo chmod 755 $1
 
 - name: Ensure Logstash is started and enabled on boot.
   service: "name=logstash state=started enabled={{ logstash_enabled_on_boot }}"

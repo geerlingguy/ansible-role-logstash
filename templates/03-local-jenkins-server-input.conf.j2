@@ -1,5 +1,5 @@
 #{{ ansible_managed }}
-#https://gist.github.com/evilchili/7046534
+#http://grokdebug.herokuapp.com/
 input {
 
   file {
@@ -17,7 +17,7 @@ filter {
 
     # set all messages from the jenkins log as type 'jenkins' and add the @message field.
     mutate {
-        add_field => ["@message_type", "jenkins"]
+#        add_field => ["@message_type", "jenkins"]
         add_field => ["@message", "%{message}"]
     }
 
@@ -28,7 +28,7 @@ filter {
         negate => true
         what => "previous"
     }
-      
+
   }
 
   # ...other event types get processed here...
@@ -38,61 +38,89 @@ filter {
 # now that we have possibly-multiline events, we can clean them up.
 # We do this in a new filter so that we only process complete events instead of individual lines.
 filter {
-    
+
+  #if [type] == "jenkins-server" {
     # munge the possibly-multiline messages into a single string
     mutate {
       join => ["@message", "\n"]
     }
-    
+	#mutate {
+	#  gsub => ['@message', "\n", "#n"]
+	#}
+    #
+	#mutate {
+	#  gsub => ['@message', "\r", "#r"]
+	#}
     # split @message into __date and __msg, and overwrite the @timestamp value.
     grok {
       match => [ "@message", "^(?<__date>%{MONTH} %{MONTHDAY}, %{YEAR} %{TIME} (AM|PM)) (?<__msg>.+)" ]
     }
-    
+
 	#date {
-	#	match => [ "__date", "MMM dd, YYYY HH:mm:ss a" ]
-	##	timezone => "America/Los_Angeles"
-	#}
+    #  locale => "en"
+    #  match => ["__date", "MMM dd, YYYY HH:mm:ss a", "YYYY-MM-dd;HH:mm:ss.SSS", "ISO8601"]
+    #  timezone => "Europe/Vienna"
+    #  target => "@timestamp"
+    #  add_field => { "debug" => "timestampMatched"}
+    #}
 
-	# ...now some patterns to categorize specific event types...
+    # ...now some patterns to categorize specific event types...
 
-	# parse build completion messages, adding the jenkins_* fields and the 'build' tag
-	#grok {
-	#	match => [ "@message", "(?<jenkins_job>\S+) #(?<jenkins_build_number>\d+) (?<__msg>.+): (?<jenkins_build_status>\w+)" ]
-	#	tag_on_failure => []
-	#	overwrite => true
-	#	add_tag => ['build']
-	#}
+    # parse build completion messages, adding the jenkins_* fields and the 'build' tag
+    grok {
+       #match => [ "@message", "(?<jenkins_job>\S+) #(?<jenkins_build_number>\d+) (?<__msg>.+): (?<jenkins_build_status>\w+)" ]
+       match => [ "@message", "\\n(?<level>\w+): (?<jenkins_job>\S+) #(?<jenkins_build_number>\d+) (?<__msg>.+): (?<jenkins_build_status>\w+)" ]
+       tag_on_failure => []
+       overwrite => true
+       add_tag => ['build']
+    }
+
+    ## tag messages that come from the perforce SCM plugin (and associated classes)
+    #grok {
+    #   match => [ "@message", "\.perforce\."]
+    #   tag_on_failure => []
+    #   add_tag => ['p4-plugin']
+    #}
+
+    # ...other grok patterns go here...
+
+    grok {
+       match => [ "__msg", "%{DATA:plugin}%{SPACE}\\n(?<level>\w+): %{GREEDYDATA:__message}" ]
+       tag_on_failure => []
+       overwrite => true
+       #overwrite => [ "message" ]
+       add_tag => ['test']
+    }
+
+    ## if we have extracted a short message string, replace @message with it now
+    #if [__message] {
+    #  mutate {
+    #    replace => ["@message","%{__message}"]
+    #  }
+    #}
     #
-	## tag messages that come from the perforce SCM plugin (and associated classes)
-	#grok {
-	#	match => [ "@message", "\.perforce\."]
-	#	tag_on_failure => []
-	#	add_tag => ['p4-plugin']
-	#}
+    ### convert message back into an array of lines
+    #mutate {
+    #   split => ["__message", "\n"]
+    #}
     #
-	## ...other grok patterns go here...
-    #
-	## if we have extracted a short message string, replace @message with it now
-	#if [__msg] {
-	#	mutate {
-	#		replace => ["@message","%{__msg}"]
-	#	}
-	#}
-    #
-	## convert @message back into an array of lines
-	#mutate {
-	#	split => ["@message", "\n"]
-	#}
+    #if [__message] {
+    #  mutate {
+    #    replace => ["message","%{__message}"]
+    #  }
+    #}
+  #}
 }
 
 # Lastly, clean-up temporary fields and unwanted tags.
 #filter {
 #    mutate {
 #        remove_field => [
-#            "message",
-#            "__msg",
-#            "__date"
+##            "message",
+##            "__msg",
+#            "__date",
+#            "debug",
+#            "test"
 #        ]
 #        remove_tag => [
 #            "multiline",

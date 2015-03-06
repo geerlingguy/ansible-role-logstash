@@ -1,14 +1,17 @@
 #{{ ansible_managed }}
 input {
   file {
+    type => "supervisor"
     path => "/var/log/supervisor/*.log"
   }
 
   file {
+    type => "zabbix"  
     path => "/var/log/zabbix-agent/*.log"
   }
 
   file {
+    type => "zabbix"  
     path => "/var/log/zabbix/*.log"
   }
 
@@ -40,27 +43,14 @@ input {
   }
 
   file {
-    path => "/var/log/upstart/*.log"
-  }
-
-  file {
+    type => "docker"  
     path => "/var/log/docker*.log"
   }
-
+  
   file {
-    path => "{{ kgr_home }}/log/*.log"
-  }
-
-  file {
-    path => "{{ kgr_home }}/dist/log/*.log"
-  }
-
-  file {
-    path => "{{ kgr_home }}/dist/3rdparty/J2EE/tomcat_dist/logs/*.log"
-  }
-
-  file {
-    path => "{{ kgr_home }}/data/J2EE/TomcatConfigs/logs/*.log"
+    path => "/var/log/upstart/*.log"
+    exclude => ["*.gz"]
+    exclude => ["logstash.log","docker.log"]
   }
 
 }

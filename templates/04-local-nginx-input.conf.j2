@@ -1,23 +1,26 @@
 #{{ ansible_managed }}
 input {
   file {
+    type => "nginx"  
     path => "/var/log/nginx/*.log"
     exclude => ["*.gz"]
   }
 }
 
 filter {
-  if [path] =~ "access" {
-    mutate { replace => { type => "nginx_access" } }
-    grok {
-      match => { "message" => "%{COMBINEDAPACHELOG}" }
+  if [type] == "nginx" {
+    if [path] =~ "access" {
+      mutate { replace => { type => "nginx_access" } }
+      grok {
+        match => { "message" => "%{COMBINEDAPACHELOG}" }
+      }
+      date {
+        match => [ "timestamp" , "dd/MMM/yyyy:HH:mm:ss Z" ]
+      }
+    } else if [path] =~ "error" {
+      mutate { replace => { type => "nginx_error" } }
+    } else {
+      mutate { replace => { type => "random_logs" } }
     }
-    date {
-      match => [ "timestamp" , "dd/MMM/yyyy:HH:mm:ss Z" ]
-    }
-  } else if [path] =~ "error" {
-    mutate { replace => { type => "nginx_error" } }
-  } else {
-    mutate { replace => { type => "random_logs" } }
   }
 }
