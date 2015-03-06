@@ -2,10 +2,6 @@
 #https://gist.github.com/evilchili/7046534
 input {
 
-  file {
-    type => "jenkins"
-    path => "{{ jenkins_home }}/logs/slaves/*/*.log"
-  }
 
   file {
     type => "jenkins"
@@ -13,6 +9,12 @@ input {
     exclude => ["Fingerprint cleanup.log", "selenium.log"]
   }
 
+#TODO multiline
+#  file {
+#    type => "jenkins-slave"
+#    path => "{{ jenkins_home }}/logs/slaves/*/*.log"
+#  }
+  
   file {
     type => "jenkins-selenium"
     path => "{{ jenkins_home }}/selenium.log"
@@ -36,12 +38,12 @@ filter {
     #  add_field => { "debug" => "timestampMatched"}
     #}    
   }
-  #}else if [type] == "jenkins" {
-  #  grok {
-  #    add_tag => [ "level_%{level}" ]
-  #    match => [ "@message", "%{LOGLEVEL:level}%{SPACE}:%{GREEDYDATA:message}" ]
-  #  }
-  #}
+  }else if [type] == "jenkins" {
+    grok {
+      add_tag => [ "level_%{level}" ]
+      match => [ "@message", "%{LOGLEVEL:level}%{SPACE}:%{GREEDYDATA:message}" ]
+    }
+  }
 
 }
 

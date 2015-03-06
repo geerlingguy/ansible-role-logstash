@@ -92,39 +92,40 @@ filter {
        add_tag => ['test']
     }
 
-    ## if we have extracted a short message string, replace @message with it now
-    #if [__message] {
-    #  mutate {
-    #    replace => ["@message","%{__message}"]
-    #  }
-    #}
-    #
-    ### convert message back into an array of lines
+    # if we have extracted a short message string, replace @message with it now
+    if [__message] {
+      mutate {
+        replace => ["@message","%{__message}"]
+      }
+    }
+    
+    ## convert message back into an array of lines
     #mutate {
     #   split => ["__message", "\n"]
     #}
-    #
-    #if [__message] {
-    #  mutate {
-    #    replace => ["message","%{__message}"]
-    #  }
-    #}
+    
+    if [__message] {
+      mutate {
+        replace => ["message","%{__message}"]
+      }
+    }
   #}
 }
 
 # Lastly, clean-up temporary fields and unwanted tags.
-#filter {
-#    mutate {
-#        remove_field => [
-##            "message",
-##            "__msg",
+filter {
+    mutate {
+        remove_field => [
+#            "@message",        
+#            "__message",
+#            "__msg",
 #            "__date",
-#            "debug",
-#            "test"
-#        ]
-#        remove_tag => [
-#            "multiline",
-#            "_grokparsefailure"
-#        ]
-#    }
-#}
+            "debug",
+            "test"
+        ]
+        remove_tag => [
+            "multiline",
+            "_grokparsefailure"
+        ]
+    }
+}
