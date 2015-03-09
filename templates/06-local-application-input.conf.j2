@@ -47,11 +47,12 @@ input {
 filter {
   if [type] == "log4j" {
    multiline {
-     type => "log4j"
      pattern => "^\\s"
+     negate => true     
      what => "previous"
    }
-#   mutate { replace => { type => "application" } }  
+   
+   mutate { replace => { type => "application" } }  
 #    add_field => [ "level", "%{@level}" ]
 
     ## Filters below here should be consistent for all log formats.

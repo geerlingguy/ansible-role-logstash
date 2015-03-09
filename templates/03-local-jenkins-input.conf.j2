@@ -37,7 +37,6 @@ filter {
     #  target => "@timestamp"
     #  add_field => { "debug" => "timestampMatched"}
     #}    
-  }
   }else if [type] == "jenkins" {
     grok {
       add_tag => [ "level_%{level}" ]
