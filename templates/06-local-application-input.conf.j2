@@ -21,12 +21,30 @@ input {
     path => "{{ kgr_home }}/log/RiskInsight.log"
   }    
   
+  file {
+    type => "sybase"
+    path => "/thomsonreuters/sybase/kplus/ASE-15_0/install/KPLUS.log"
+  }      
+  
+  file {
+    type => "sybase"
+    path => "/thomsonreuters/sybase/kplus/ASE-15_0/install/KPLUS.log"
+  }    
+  
+  file {
+    type => "sybase"
+    path => "/thomsonreuters/sybase/kgr/ASE-15_0/install/KGR.log"
+  }     
+     
 #/thomsonreuters/sybase/kplus/ASE-15_0/install/RUN_KPLUS
 # Error log path: /thomsonreuters/sybase/kplus/ASE-15_0/install/KPLUS.log
 #$SYBASE/ASE-15_0/install/ start scripts defines sybase log path
-  
-#log4cxx KGRAdapter_stdout.log
 
+  file {
+    type => "log4cxx"
+    path => "{{ kgr_home }}/log/KGRAdapter_stdout.log"
+  }    
+  
 #  file {
 #    type => "log4j"  
 #    path => "{{ kgr_home }}/dist/log/*.log"
@@ -46,13 +64,12 @@ input {
 
 filter {
   if [type] == "log4j" {
-   multiline {
-     pattern => "^\\s"
-     negate => true     
-     what => "previous"
-   }
-   
-   mutate { replace => { type => "application" } }  
+    multiline {
+      pattern => "^%{TIMESTAMP_ISO8601}%{SPACE}%{LOGLEVEL:level}%{SPACE}"
+      negate => true     
+      what => "previous"
+    }
+    mutate { replace => { type => "application" } }  
 #    add_field => [ "level", "%{@level}" ]
 
     ## Filters below here should be consistent for all log formats.
@@ -62,6 +79,24 @@ filter {
     #}
   
   }
+   
+  if [type] == "log4cxx" {
+    multiline {
+      pattern => "^%{YEAR}%{SPACE}%{MONTH}%{SPACE}%{MONTHDAY}%{SPACE}%{TIME}%{SPACE}GMT%{SPACE}\+0"
+      negate => true     
+      what => "previous"
+    }   
+    mutate { replace => { type => "application" } }     
+  }
+  
+  if [type] == "sybase" {
+    multiline {
+      pattern => "^%{NUMBER:num1}:%{NUMBER:num2}:%{NUMBER:num3}:%{NUMBER:num4}:%{YEAR}/%{MONTHNUM}/%{MONTHDAY}%{SPACE}%{TIME}"
+      negate => true     
+      what => "previous"
+    }   
+#    mutate { replace => { type => "application" } }     
+  }  
 }
 
 #filter {
