@@ -5,6 +5,7 @@ logstash_elasticsearch_host: localhost
 
 logstash_local_syslog_path: "/var/log/syslog"
 logstash_monitor_local_syslog: true
+logstash_disable_logstash_web: true
 
 logstash_ssl_dir: /etc/pki/logstash
 logstash_ssl_certificate_file: logstash-forwarder-example.crt

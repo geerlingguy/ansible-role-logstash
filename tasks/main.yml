@@ -76,5 +76,13 @@
     - "{{ logstash_ssl_certificate_file }}"
   notify: restart logstash
 
+- name: Stop Logstash Web service
+  service: name=logstash-web state=stopped
+  when: logstash_disable_logstash_web | bool
+
+- name: Remove Logstash Web service
+  file: path=/etc/init/logstash-web.conf state=absent
+  when: logstash_disable_logstash_web | bool
+
 - name: Ensure Logstash is started and enabled on boot.
   service: "name=logstash state=started enabled={{ logstash_enabled_on_boot }}"
