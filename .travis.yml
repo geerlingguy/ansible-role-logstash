@@ -17,7 +17,8 @@ install:
   - "{ echo '[defaults]'; echo 'roles_path = ../'; } >> ansible.cfg"
 
   # Install required dependencies.
-  - ansible-galaxy install geerlingguy.elasticsearch
+  #- ansible-galaxy install geerlingguy.elasticsearch
+  - git clone https://github.com/geerlingguy/ansible-role-elasticsearch.git geerlingguy.elasticsearch
 
 script:
   # Check the role/playbook's syntax.
