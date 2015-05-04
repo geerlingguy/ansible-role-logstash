@@ -1,8 +1,12 @@
 ---
 language: python
 python: "2.7"
-
 env:
+  #- ANSIBLE_VERSION=1.4
+  #- ANSIBLE_VERSION=1.5
+  #- ANSIBLE_VERSION=1.6
+  #- ANSIBLE_VERSION=1.7
+  - ANSIBLE_VERSION=1.8
   - SITE=test.yml
 
 before_install:
@@ -11,14 +15,14 @@ before_install:
 
 install:
   # Install Ansible.
-  - pip install ansible
+  - pip install ansible==$ANSIBLE_VERSION
 
   # Add ansible.cfg to pick up roles path.
   - "{ echo '[defaults]'; echo 'roles_path = ../'; } >> ansible.cfg"
 
   # Install required dependencies.
   #- ansible-galaxy install geerlingguy.elasticsearch
-  - git clone https://github.com/geerlingguy/ansible-role-elasticsearch.git geerlingguy.elasticsearch
+  - git clone https://github.com/geerlingguy/ansible-role-elasticsearch.git ./tests/geerlingguy.elasticsearch
 
 script:
   # Check the role/playbook's syntax.
