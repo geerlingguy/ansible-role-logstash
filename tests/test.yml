@@ -1,6 +1,10 @@
 ---
 - hosts: localhost
   remote_user: root
+
+  vars:
+    logstash_enabled_on_boot: no
+
   roles:
     - geerlingguy.elasticsearch
     - ansible-role-logstash
