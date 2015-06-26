@@ -52,13 +52,13 @@
 
 - name: Ensure Logstash SSL key pair directory exists.
   file:
-    path: "{{ logstash_ssl_dir }}"
+    path: "{{ logstash_ssl_dest_dir }}"
     state: directory
 
 - name: Copy SSL key and cert for logstash-forwarder.
   copy:
-    src: "{{ item }}"
-    dest: "{{ logstash_ssl_dir }}/{{ item }}"
+    src: "{{ logstash_ssl_src_dir }}/{{ item }}"
+    dest: "{{ logstash_ssl_dest_dir }}/{{ item }}"
     mode: 0644
   with_items:
     - "{{ logstash_ssl_key_file }}"
