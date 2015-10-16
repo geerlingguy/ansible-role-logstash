@@ -41,6 +41,13 @@
     mode: 0644
   when: logstash_monitor_local_syslog
   notify: restart logstash
+  
+- name: Delete Logstash configuration file for local syslog
+  file:
+    path: /etc/logstash/conf.d/02-local-syslog-input.conf
+    state: absent
+  when: not logstash_monitor_local_syslog
+  notify: restart logstash
 
 - name: Warn user if using insecure SSL key pair.
   debug:
