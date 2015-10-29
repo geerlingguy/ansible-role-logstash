@@ -45,9 +45,6 @@ If you are seeing high CPU usage from one of the `logstash` processes, and you'r
     - name: Ensure logstash-web process is stopped and disabled.
       service: name=logstash-web state=stopped enabled=no
 
-## Dependencies
-
-  - geerlingguy.elasticsearch
 
 ## Example Playbook
 
