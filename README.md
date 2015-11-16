@@ -29,6 +29,8 @@ The host on which Elasticsearch resides.
 
 SSL configuration for Logstash to accept requests from logstash-forwarder running on remote hosts. **Security note**: On production or public-facing (e.g. any non-test) servers, you should create your own key/certificate pair and use that instead of the included default! You can use OpenSSL to create the key and certificate files, with a command like the following: `openssl req -x509  -batch -nodes -newkey rsa:2048 -keyout lumberjack.key -out lumberjack.crt -subj /CN=logstash.example.com`.
 
+For the `logstash_ssl_certificate_file` and `logstash_ssl_key_file`, you can provide a path relative to the role directory, or an absolute path to the file.
+
     logstash_local_syslog_path: /var/log/syslog
     logstash_monitor_local_syslog: true
 
