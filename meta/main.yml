@@ -1,6 +1,5 @@
 ---
-dependencies:
-  - { role: geerlingguy.elasticsearch }
+dependencies: []
 
 galaxy_info:
   author: geerlingguy
