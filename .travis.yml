@@ -19,6 +19,7 @@ install:
 
   # Install required dependencies.
   #- ansible-galaxy install geerlingguy.elasticsearch
+  - git clone https://github.com/AlbanAndrieu/ansible-util.git ./tests/silpion.util
   - git clone https://github.com/geerlingguy/ansible-role-java.git ./tests/geerlingguy.java
   - git clone https://github.com/geerlingguy/ansible-role-elasticsearch.git ./tests/geerlingguy.elasticsearch
 
