@@ -1,5 +1,9 @@
 output {
   elasticsearch {
-    host => {{ logstash_elasticsearch_host }}
+    host => {{ logstash_elasticsearch_host }}{% if logstash_elasticsearch_port %}:{{ logstash_elasticsearch_port }}{% endif %}
+    
+{% if logstash_elasticsearch_cluster %}
+    cluster => {{ logstash_elasticsearch_cluster }}
+{% endif %}
   }
 }
