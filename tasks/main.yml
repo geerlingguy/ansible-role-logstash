@@ -41,8 +41,8 @@
     mode: 0644
   when: logstash_monitor_local_syslog
   notify: restart logstash
-  
-- name: Delete Logstash configuration file for local syslog
+
+- name: Ensure configuration for local syslog is absent if disabled.
   file:
     path: /etc/logstash/conf.d/02-local-syslog-input.conf
     state: absent
