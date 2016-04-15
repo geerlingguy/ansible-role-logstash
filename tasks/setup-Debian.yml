@@ -6,7 +6,7 @@
 
 - name: Add Logstash repository.
   apt_repository:
-    repo: 'deb http://packages.elasticsearch.org/logstash/1.4/debian stable main'
+    repo: 'deb http://packages.elasticsearch.org/logstash/2.3/debian stable main'
     state: present
 
 - name: Check if Logstash is already installed.

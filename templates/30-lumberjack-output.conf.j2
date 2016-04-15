@@ -1,5 +1,6 @@
 output {
   elasticsearch {
-    host => {{ logstash_elasticsearch_host }}
+    hosts => ["{{ logstash_elasticsearch_host }}"]
+    template_overwrite => true
   }
 }
