@@ -23,6 +23,10 @@ The port over which Logstash will listen for beats.
 
 The hosts where Logstash should ship logs to Elasticsearch.
 
+    logstash_version: 2.3
+
+Default major version of Logstash to install.
+
     logstash_ssl_dir: /etc/pki/logstash
     logstash_ssl_certificate_file: logstash-forwarder-example.crt
     logstash_ssl_key_file: logstash-forwarder-example.key
