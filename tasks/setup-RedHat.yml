@@ -1,14 +1,19 @@
 ---
 - name: Add Elasticsearch GPG key.
   rpm_key:
-    key: http://packages.elasticsearch.org/GPG-KEY-elasticsearch
+    key: http://packages.elastic.co/GPG-KEY-elasticsearch
     state: present
 
 - name: Add Logstash repository.
-  copy:
-    src: logstash.repo
-    dest: /etc/yum.repos.d/logstash.repo
-    mode: 0644
+  yum_repository:
+    name: logstash-{{ logstash_version }}
+    description: Logstash repository for {{ logstash_version }}.x packages
+    baseurl: http://packages.elastic.co/logstash/{{ logstash_version }}/centos
+    gpgcheck: yes
+    gpgkey: http://packages.elastic.co/GPG-KEY-elasticsearch
+    enabled: yes
 
 - name: Install Logstash.
-  yum: pkg=logstash state=installed
+  yum:
+    pkg: logstash
+    state: installed
