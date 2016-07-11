@@ -19,6 +19,10 @@ Available variables are listed below, along with default values (see `defaults/m
 
 The TCP and UDP ports over which logstash will listen for syslog messages.
 
+    logstash_version: 2.3
+
+Default major version of Logstash to install.
+
     logstash_elasticsearch_host: localhost
 
 The host on which Elasticsearch resides.
