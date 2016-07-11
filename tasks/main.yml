@@ -12,9 +12,7 @@
     owner: root
     group: root
     mode: 0644
-  with_items:
-    - 01-lumberjack-input.conf
-    - 30-lumberjack-output.conf
+  with_items: "{{ logstash_configuration_files | default([]) }}"
   notify: restart logstash
 
 - name: Create Logstash filters.
@@ -24,12 +22,7 @@
     owner: root
     group: root
     mode: 0644
-  with_items:
-    - 10-syslog.conf
-    - 11-nginx.conf
-    - 12-apache.conf
-    - 14-solr.conf
-    - 15-drupal.conf
+  with_items: "{{ logstash_filter_files | default([]) }}"
   notify: restart logstash
 
 - name: Create Logstash configuration file for local syslog.
@@ -73,4 +66,7 @@
   notify: restart logstash
 
 - name: Ensure Logstash is started and enabled on boot.
-  service: "name=logstash state=started enabled={{ logstash_enabled_on_boot }}"
+  service:
+    name: logstash
+    state: started
+    enabled: "{{ logstash_enabled_on_boot }}"

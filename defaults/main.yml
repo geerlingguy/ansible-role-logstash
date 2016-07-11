@@ -1,6 +1,17 @@
 ---
 logstash_version: 2.3
 
+logstash_configuration_files:
+  - 01-lumberjack-input.conf
+  - 30-lumberjack-output.conf
+
+logstash_filter_files:
+  - 10-syslog.conf
+  - 11-nginx.conf
+  - 12-apache.conf
+  - 14-solr.conf
+  - 15-drupal.conf
+
 logstash_listen_port_lumberjack: 5000
 
 logstash_elasticsearch_host: localhost
