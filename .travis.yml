@@ -1,46 +1,68 @@
 ---
 sudo: required
-language: python
-python: "2.7"
 
 env:
-  - SITE=test.yml
+  global:
+    # https://github.com/travis-ci/travis-ci/issues/6461#issuecomment-239577306
+    DOCKER_VERSION: "1.9.1-0~trusty"
+  matrix:
+    - distro: centos7
+      init: /usr/lib/systemd/systemd
+      run_opts: "--privileged --volume=/sys/fs/cgroup:/sys/fs/cgroup:ro"
+    - distro: centos6
+      init: /sbin/init
+      run_opts: ""
+    - distro: ubuntu1604
+      init: /lib/systemd/systemd
+      run_opts: "--privileged --volume=/sys/fs/cgroup:/sys/fs/cgroup:ro"
+    - distro: ubuntu1404
+      init: /sbin/init
+      run_opts: ""
+    - distro: ubuntu1204
+      init: /sbin/init
+      run_opts: ""
+
+services:
+  - docker
 
 before_install:
-  - sudo apt-get update -qq
-  - sudo apt-get install curl
+  # Downgrade to specific version of Docker engine.
+  - sudo apt-get update
+  - sudo apt-get remove docker-engine -yq
+  - sudo apt-get install docker-engine=$DOCKER_VERSION -yq --no-install-suggests --no-install-recommends --force-yes -o Dpkg::Options::="--force-confnew"
 
-install:
-  # Install Ansible.
-  - pip install ansible
-
-  # Add ansible.cfg to pick up roles path.
-  - "{ echo '[defaults]'; echo 'roles_path = ../'; } >> ansible.cfg"
-
-  # Install required dependencies.
-  - ansible-galaxy install geerlingguy.elasticsearch
+  # Pull container.
+  - 'sudo docker pull geerlingguy/docker-${distro}-ansible:latest'
 
 script:
-  # Check the role/playbook's syntax.
-  - "ansible-playbook -i tests/inventory tests/$SITE --syntax-check"
+  - container_id=$(mktemp)
+  # Run container in detached state.
+  - 'sudo docker run --detach --volume="${PWD}":/etc/ansible/roles/role_under_test:ro ${run_opts} geerlingguy/docker-${distro}-ansible:latest "${init}" > "${container_id}"'
 
-  # Run the role/playbook with ansible-playbook.
-  - "ansible-playbook -i tests/inventory tests/$SITE --connection=local --sudo"
-  - "ansible-playbook -i tests/inventory tests/$SITE --connection=local --sudo"
+  # Install dependencies.
+  - 'sudo docker exec "$(cat ${container_id})" ansible-galaxy install -r /etc/ansible/roles/role_under_test/tests/requirements.yml'
 
-  # Run the role/playbook again, checking to make sure it's idempotent.
+  # Ansible syntax check.
+  - 'sudo docker exec --tty "$(cat ${container_id})" env TERM=xterm ansible-playbook /etc/ansible/roles/role_under_test/tests/test.yml --syntax-check'
+
+  # Test role.
+  - 'sudo docker exec --tty "$(cat ${container_id})" env TERM=xterm ansible-playbook /etc/ansible/roles/role_under_test/tests/test.yml'
+
+  # Test role idempotence.
+  - idempotence=$(mktemp)
+  - sudo docker exec "$(cat ${container_id})" ansible-playbook /etc/ansible/roles/role_under_test/tests/test.yml | tee -a ${idempotence}
   - >
-    ansible-playbook -i tests/inventory tests/$SITE --connection=local --sudo
+    tail ${idempotence}
     | grep -q 'changed=0.*failed=0'
     && (echo 'Idempotence test: pass' && exit 0)
     || (echo 'Idempotence test: fail' && exit 1)
 
-  # TODO: Test if logstash is working correctly.
+  # Test whether kibana is running correctly.
+  - 'sudo docker exec --tty "$(cat ${container_id})" env TERM=xterm curl http://localhost:5601/'
 
-after_failure:
-  - sudo cat /var/log/logstash/logstash.err
-  - sudo cat /var/log/logstash/logstash.log
-  - sudo cat /var/log/logstash/logstash.stdout
+after_success:
+  # Clean up.
+  - 'sudo docker stop "$(cat ${container_id})"'
 
 notifications:
   webhooks: https://galaxy.ansible.com/api/v1/notifications/

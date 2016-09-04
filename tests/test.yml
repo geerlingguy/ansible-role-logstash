@@ -1,10 +1,15 @@
 ---
-- hosts: localhost
-  remote_user: root
+- hosts: all
 
   vars:
     logstash_enabled_on_boot: no
 
+  pre_tasks:
+    - name: Update apt cache.
+      apt: update_cache=yes
+      when: ansible_os_family == 'Debian'
+
   roles:
+    - geerlingguy.java
     - geerlingguy.elasticsearch
-    - ansible-role-logstash
+    - role_under_test
