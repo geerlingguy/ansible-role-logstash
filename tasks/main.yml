@@ -5,72 +5,9 @@
 - include: setup-Debian.yml
   when: ansible_os_family == 'Debian'
 
-- name: Create Logstash configuration files.
-  template:
-    src: "{{ item }}.j2"
-    dest: "/etc/logstash/conf.d/{{ item }}"
-    owner: root
-    group: root
-    mode: 0644
-  with_items:
-    - 01-lumberjack-input.conf
-    - 30-lumberjack-output.conf
-  notify: restart logstash
-
-- name: Create Logstash filters.
-  copy:
-    src: "filters/{{ item }}"
-    dest: "/etc/logstash/conf.d/{{ item }}"
-    owner: root
-    group: root
-    mode: 0644
-  with_items:
-    - 10-syslog.conf
-    - 11-nginx.conf
-    - 12-apache.conf
-    - 14-solr.conf
-    - 15-drupal.conf
-  notify: restart logstash
-
-- name: Create Logstash configuration file for local syslog.
-  template:
-    src: 02-local-syslog-input.conf.j2
-    dest: /etc/logstash/conf.d/02-local-syslog-input.conf
-    owner: root
-    group: root
-    mode: 0644
-  when: logstash_monitor_local_syslog
-  notify: restart logstash
-
-- name: Ensure configuration for local syslog is absent if disabled.
-  file:
-    path: /etc/logstash/conf.d/02-local-syslog-input.conf
-    state: absent
-  when: not logstash_monitor_local_syslog
-  notify: restart logstash
-
-- name: Warn user if using insecure SSL key pair.
-  debug:
-    msg: >
-      ***SECURITY RISK***: You are currently using the included/default SSL key
-      pair. Please generate your own secure key pair if using this playbook for
-      any kind of production purposes!
-  when: "logstash_ssl_certificate_file.find('-example.crt') != -1"
-
-- name: Ensure Logstash SSL key pair directory exists.
-  file:
-    path: "{{ logstash_ssl_dir }}"
-    state: directory
-
-- name: Copy SSL key and cert for logstash-forwarder.
-  copy:
-    src: "{{ item }}"
-    dest: "{{ logstash_ssl_dir }}/{{ item | basename }}"
-    mode: 0644
-  with_items:
-    - "{{ logstash_ssl_key_file }}"
-    - "{{ logstash_ssl_certificate_file }}"
-  notify: restart logstash
+- include: config.yml
+- include: ssl.yml
+- include: plugins.yml
 
 - name: Ensure Logstash is started and enabled on boot.
   service: "name=logstash state=started enabled={{ logstash_enabled_on_boot }}"

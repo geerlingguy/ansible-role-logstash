@@ -1,0 +1,17 @@
+---
+- name: Ensure Logstash SSL key pair directory exists.
+  file:
+    path: "{{ logstash_ssl_dir }}"
+    state: directory
+  when: logstash_ssl_key_file
+
+- name: Copy SSL key and cert for logstash-forwarder.
+  copy:
+    src: "{{ item }}"
+    dest: "{{ logstash_ssl_dir }}/{{ item | basename }}"
+    mode: 0644
+  with_items:
+    - "{{ logstash_ssl_key_file }}"
+    - "{{ logstash_ssl_certificate_file }}"
+  notify: restart logstash
+  when: logstash_ssl_key_file

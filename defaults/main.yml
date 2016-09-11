@@ -1,13 +1,17 @@
 ---
-logstash_listen_port_lumberjack: 5000
+logstash_listen_port_beats: 5044
 
-logstash_elasticsearch_host: localhost
+logstash_elasticsearch_hosts:
+  - http://localhost:9200
 
 logstash_local_syslog_path: /var/log/syslog
 logstash_monitor_local_syslog: true
 
 logstash_ssl_dir: /etc/pki/logstash
-logstash_ssl_certificate_file: logstash-forwarder-example.crt
-logstash_ssl_key_file: logstash-forwarder-example.key
+logstash_ssl_certificate_file: ""
+logstash_ssl_key_file: ""
 
 logstash_enabled_on_boot: yes
+
+logstash_install_plugins:
+  - logstash-input-beats
