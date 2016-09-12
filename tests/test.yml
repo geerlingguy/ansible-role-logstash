@@ -9,6 +9,11 @@
       apt: update_cache=yes
       when: ansible_os_family == 'Debian'
 
+    - name: Set JAVA_HOME for RedHat.
+      set_fact:
+        java_home: /usr/lib/jvm/java-1.8.0-openjdk-1.8.0.101-3.b13.el7_2.x86_64/jre
+      when: ansible_os_family == 'RedHat'
+
   roles:
     - geerlingguy.java
     - geerlingguy.elasticsearch
