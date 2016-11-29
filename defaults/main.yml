@@ -1,4 +1,9 @@
 ---
+
+## 5.x requires java8!
+#logstash_repo_version: 5.x
+logstash_repo_version: 2.x
+
 logstash_listen_port_beats: 5044
 
 logstash_elasticsearch_hosts:
