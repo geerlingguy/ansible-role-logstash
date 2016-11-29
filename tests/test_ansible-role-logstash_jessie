@@ -1,8 +1,10 @@
 #!/bin/bash
 
 test_logstash_is_running() {
-  grep -q Debian /etc/issue && assert "service logstash status |grep -q 'running'"
-  grep -q CentOS /etc/issue && assert "initctl status logstash |grep -q 'start/running'"
+  running=1
+  grep -q Debian /etc/issue && (service logstash status |grep -q 'running') && running=$?
+  grep -q CentOS /etc/issue && (initctl status logstash |grep -q 'start/running') && running=$?
+  assert "test $running -eq 0"
 }
 
 test_idempotence() {
@@ -11,9 +13,10 @@ test_idempotence() {
 
 test_version_installed() {
   version_found=0
-  [ -x /opt/logstash/bin/logstash ] && version_found=1 && assert_equals "$(/opt/logstash/bin/logstash --version)" "logstash 2.3.4"
-  [ -x /usr/share/logstash/bin/logstash ] && version_found=1 && assert_equals "$(/usr/share/logstash/bin/logstash --version)" "logstash 5.6.0"
-#  [ "$version_found" -eq 0 ] && fail "no version found"
+  expected_version=tbd
+  [ -x /opt/logstash/bin/logstash ] && expected_version="logstash 2.3.4" && version_found="$(/opt/logstash/bin/logstash --version)"
+  [ -x /usr/share/logstash/bin/logstash ] && expected_version="logstash 5.6.0" && version_found="$(/usr/share/logstash/bin/logstash --version)"
+  assert_equals "$expected_version" "$version_found"
 }
 
 run_ansible() {
