@@ -6,10 +6,19 @@
     owner: root
     group: root
     mode: 0644
-  with_items:
-    - 01-beats-input.conf
-    - 30-elasticsearch-output.conf
+  with_items: "{{ logstash_config }}"
   notify: restart logstash
+- name: Create Logstash configuration files for remote syslog input
+  template:
+    src: "{{ item }}.j2"
+    dest: "/etc/logstash/conf.d/{{ item }}"
+    owner: root
+    group: root
+    mode: 0644
+  with_items:
+    - 10-remote-rsyslog-input.conf
+  notify: restart logstash
+  when: logstash_listen_port_rsyslog is defined and logstash_listen_port_rsyslog != ''
 
 - name: Create Logstash filters.
   copy:
@@ -18,12 +27,7 @@
     owner: root
     group: root
     mode: 0644
-  with_items:
-    - 10-syslog.conf
-    - 11-nginx.conf
-    - 12-apache.conf
-    - 14-solr.conf
-    - 15-drupal.conf
+  with_items: "{{ logstash_filters }}"
   notify: restart logstash
 
 - name: Create Logstash configuration file for local syslog.

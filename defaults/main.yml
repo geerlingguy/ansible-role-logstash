@@ -1,5 +1,9 @@
 ---
+
+#logstash_listen_ip: "{{ ansible_default_ipv4.address }}"
+logstash_listen_ip: 127.0.0.1
 logstash_listen_port_beats: 5044
+logstash_listen_port_rsyslog: 10514
 
 logstash_elasticsearch_hosts:
   - http://localhost:9200
@@ -12,6 +16,17 @@ logstash_ssl_certificate_file: ""
 logstash_ssl_key_file: ""
 
 logstash_enabled_on_boot: yes
+
+logstash_config:
+    - 01-beats-input.conf
+    - 30-elasticsearch-output.conf
+
+logstash_filters:
+    - 10-syslog.conf
+    - 11-nginx.conf
+    - 12-apache.conf
+    - 14-solr.conf
+    - 15-drupal.conf
 
 logstash_install_plugins:
   - logstash-input-beats

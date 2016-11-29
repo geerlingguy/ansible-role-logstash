@@ -1,0 +1,31 @@
+## from https://www.digitalocean.com/community/tutorials/how-to-centralize-logs-with-rsyslog-logstash-and-elasticsearch-on-ubuntu-14-04
+
+input {
+  udp {
+    host => "{{ logstash_listen_ip }}"
+    port => {{ logstash_listen_port_rsyslog }}
+    codec => "json"
+    type => "rsyslog"
+  }
+}
+
+# This is an empty filter block.  You can later add other filters here to further process
+# your log lines
+
+filter { }
+
+# This output block will send all events of type "rsyslog" to Elasticsearch at the configured
+# host and port into daily indices of the pattern, "rsyslog-YYYY.MM.DD"
+
+output {
+  if [type] == "rsyslog" {
+    elasticsearch {
+      hosts => [ 
+{% for h in logstash_elasticsearch_hosts %}
+        "{{ h }}",
+{% endfor %}
+        ]
+    }
+  }
+}
+
