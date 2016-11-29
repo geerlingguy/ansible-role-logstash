@@ -4,20 +4,24 @@
     url: http://packages.elastic.co/GPG-KEY-elasticsearch
     state: present
 
-- name: Add Logstash repository.
+- name: Add Logstash repository. - 2.x
   apt_repository:
     repo: 'deb http://packages.elasticsearch.org/logstash/{{ logstash_version }}/debian stable main'
     state: present
-
-- name: Check if Logstash is already installed.
-  stat:
-    path: /etc/init.d/logstash
-  register: logstash_installed
-
-- name: Update apt cache if repository just added.
-  apt:
     update_cache: yes
-  when: logstash_installed.stat.exists == false
+  when: logstash_version[0] ==  '2'
+
+- name: Add apt-transport-https. - 5.x
+  apt:
+    name: apt-transport-https
+  when: logstash_version[0] ==  '5'
+
+- name: Add Logstash repository. - 5.x
+  apt_repository:
+    repo: 'deb https://artifacts.elastic.co/packages/5.x/apt stable main'
+    state: present
+    update_cache: yes
+  when: logstash_version[0] ==  '5'
 
 - name: Install Logstash.
   apt:

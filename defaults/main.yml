@@ -1,7 +1,8 @@
 ---
+
 logstash_listen_port_beats: 5044
 
-logstash_version: 2.3
+logstash_version: 5.6.0
 
 logstash_configuration_files:
   - 01-beats-input.conf

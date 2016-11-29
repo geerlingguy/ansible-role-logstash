@@ -31,7 +31,9 @@ The port over which Logstash will listen for beats.
 
 The hosts where Logstash should ship logs to Elasticsearch.
 
-    logstash_version: 2.3
+    logstash_version: 5.6.0
+
+The version to install (tested: 2.3 and 5.6)
 
     logstash_configuration_files:
       - 01-beats-input.conf
