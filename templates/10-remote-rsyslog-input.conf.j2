@@ -22,7 +22,7 @@ output {
     elasticsearch {
       hosts => [ 
 {% for h in logstash_elasticsearch_hosts %}
-        "{{ h }}",
+        "{{ h }}"{% if not loop.last %},{% endif %}
 {% endfor %}
         ]
     }
