@@ -1,8 +1,11 @@
 ---
 logstash_listen_port_beats: 5044
 
-logstash_elasticsearch_hosts:
-  - http://localhost:9200
+logstash_outputs:
+  elasticsearch:
+    hosts: [ "http://localhost:9200" ]
+    index: "%{[@metadata][beat]}-%{+YYYY.MM.dd}"
+    document_type: "%{[@metadata][type]}"
 
 logstash_local_syslog_path: /var/log/syslog
 logstash_monitor_local_syslog: true

@@ -18,10 +18,13 @@ Available variables are listed below, along with default values (see `defaults/m
 
 The port over which Logstash will listen for beats.
 
-    logstash_elasticsearch_hosts:
-      - http://localhost:9200
+    logstash_outputs:
+      elasticsearch:
+        hosts: [ "http://localhost:9200" ]
+        index: "%{[@metadata][beat]}-%{+YYYY.MM.dd}"
+        document_type: "%{[@metadata][type]}"
 
-The hosts where Logstash should ship logs to Elasticsearch.
+The default output which sends logs to a local Elasticsearch node.
 
     logstash_ssl_dir: /etc/pki/logstash
     logstash_ssl_certificate_file: logstash-forwarder-example.crt

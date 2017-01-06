@@ -1,7 +1,0 @@
-output {
-  elasticsearch {
-    hosts => {{ logstash_elasticsearch_hosts | to_json }}
-    index => "%{[@metadata][beat]}-%{+YYYY.MM.dd}"
-    document_type => "%{[@metadata][type]}"
-  }
-}

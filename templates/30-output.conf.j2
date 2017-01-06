@@ -1,0 +1,18 @@
+output {
+{% if logstash_elasticsearch_hosts is defined %}
+{# deprecated #}
+# The ansible variable 'logstash_elasticsearch_hosts' is deprecated.
+# Please consider switching to the more generic 'logstash_outputs' variable.
+  elasticsearch {
+    hosts => {{ logstash_elasticsearch_hosts | to_json }}
+    index => "%{[@metadata][beat]}-%{+YYYY.MM.dd}"
+    document_type => "%{[@metadata][type]}"
+  }
+{% else %}
+{% for name, params in logstash_outputs.iteritems() %}
+  {{ name }} {
+    {{ params | to_logstash }}
+  }
+{% endfor %}
+{% endif %}
+}
