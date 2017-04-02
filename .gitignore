@@ -1,1 +1,3 @@
 files/logstash-forwarder*
+*.retry
+tests/test.sh
