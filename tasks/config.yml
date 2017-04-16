@@ -42,3 +42,13 @@
     state: absent
   when: not logstash_monitor_local_syslog
   notify: restart logstash
+
+- name: Add sysconfig for logstash (Redhat)
+  template:
+    src: logstash-sysconfig.j2
+    dest: /etc/sysconfig/logstash
+    owner: root
+    group: root
+    mode: 0644
+  notify: restart logstash
+  when: ansible_os_family == "RedHat"

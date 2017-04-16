@@ -51,6 +51,11 @@ Set this to `no` if you don't want logstash to run on system startup.
 
 A list of Logstash plugins that should be installed.
 
+If logstash needs to be run as different user on Redhat, you can use following variable:
+
+    logstash_user: logstash
+
+
 ## Other Notes
 
 If you are seeing high CPU usage from one of the `logstash` processes, and you're using Logstash along with another application running on port 80 on a platform like Ubuntu with upstart, the `logstash-web` process may be stuck in a loop trying to start on port 80, failing, and trying to start again, due to the `restart` flag being present in `/etc/init/logstash-web.conf`. To avoid this problem, either change that line to add a `limit` to the respawn statement, or set the `logstash-web` service to `enabled=no` in your playbook, e.g.:
