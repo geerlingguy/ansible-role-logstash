@@ -6,7 +6,7 @@
 
 - name: Add Logstash repository
   template:
-    src: {{ logstash_repo_src }}.j2
+    src: "{{ logstash_repo_src }}.j2"
     dest: /etc/yum.repos.d/{{ logstash_repo }}
     mode: 0644
 
