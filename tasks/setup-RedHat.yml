@@ -1,14 +1,16 @@
 ---
-- name: Add Elasticsearch GPG key.
+- name: Add Elasticsearch GPG key
   rpm_key:
-    key: http://packages.elasticsearch.org/GPG-KEY-elasticsearch
+    key: "{{ es_gpg_key }}"
     state: present
 
-- name: Add Logstash repository.
-  copy:
-    src: logstash.repo
-    dest: /etc/yum.repos.d/logstash.repo
+- name: Add Logstash repository
+  template:
+    src: {{ logstash_repo_src }}.j2
+    dest: /etc/yum.repos.d/{{ logstash_repo }}
     mode: 0644
 
-- name: Install Logstash.
-  yum: pkg=logstash state=installed
+- name: Install Logstash
+  yum:
+    pkg: logstash
+    state: installed

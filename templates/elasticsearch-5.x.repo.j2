@@ -1,0 +1,10 @@
+[elasticsearch-{{ es_major_version }}]
+name=Elasticsearch repository for {{ es_major_version }} packages
+baseurl={{ logstash_yum_baseurl }}
+gpgcheck=1
+gpgkey={{ es_gpg_key }}
+enabled=1
+{% if logstash_proxy_host is defined and logstash_proxy_port is defined %}
+proxy=http://{{ logstash_proxy_host }}:{{logstash_proxy_port}}
+{% endif %}
+
