@@ -1,0 +1,6 @@
+---
+logstash_apt_url: "deb {{ logstash_artifacts_url }}/packages/{{ logstash_major_version }}/apt stable main"
+logstash_yum_baseurl: "{{ logstash_artifacts_url }}/packages/{{ logstash_major_version }}/yum"
+logstash_repo_src: elasticsearch-5.x.repo
+logstash_repo: elasticsearch-5.x.repo
+logstash_home: "/usr/share/logstash"

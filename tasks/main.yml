@@ -1,4 +1,7 @@
 ---
+- name: Include variables specific to major version
+  include_vars: "{{ logstash_major_version }}.yml"
+
 - name: Include OS Specific setup tasks
   include: setup-{{ ansible_os_family }}.yml
 

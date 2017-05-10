@@ -1,0 +1,6 @@
+---
+logstash_apt_url: "deb {{ logstash_packages_url }}/logstash/{{ logstash_version }}/debian stable main"
+logstash_yum_baseurl: "{{ logstash_packages_url }}/logstash/{{ logstash_version }}/centos"
+logstash_repo_src: logstash-{{ logstash_major_version }}.repo
+logstash_repo: logstash-{{ logstash_version }}.repo
+logstash_home: "/opt/logstash"

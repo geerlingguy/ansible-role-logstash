@@ -22,22 +22,3 @@ logstash_artifacts_url: "https://artifacts.elastic.co"
 logstash_packages_url: "http://packages.elastic.co"
 
 es_gpg_key: "{{ logstash_artifacts_url }}/GPG-KEY-elasticsearch"
-
-{% if logstash_major_version == '5.x' %}
-logstash_apt_url: "deb {{ logstash_artifacts_url }}/packages/{{ logstash_major_version }}/apt stable main"
-{% elif logstash_major_version == '2.x' %}
-logstash_apt_url: "deb {{ logstash_packages_url }}/logstash/{{ logstash_version }}/debian stable main"
-{% endif %}
-
-{% if logstash_major_version == '5.x' %}
-logstash_yum_baseurl: "{{ logstash_artifacts_url }}/packages/{{ logstash_major_version }}/yum"
-{% elif logstash_major_version == '2.x' %}
-logstash_yum_baseurl: "{{ logstash_packages_url }}/logstash/{{ logstash_version }}/centos"
-
-{% if logstash_major_version == '2.x' %}
-logstash_repo_src: logstash-{{ logstash_major_version }}.repo
-logstash_repo: logstash-{{ logstash_version }}.repo
-{% elif logstash_major_version == '5.x' %}
-logstash_repo_src: elasticsearch-5.x.repo
-logstash_repo: elasticsearch-5.x.repo
-{% endif %}
