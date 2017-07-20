@@ -18,5 +18,5 @@
     ./bin/logstash-plugin install {{ item }}
     chdir={{ logstash_dir }}
   with_items: "{{ logstash_install_plugins }}"
-  when: "item not in logstash_plugins_list.stdout"
+  when: "logstash_plugins_list is defined and not logstash_plugins_list | skipped and item not in logstash_plugins_list.stdout"
   notify: restart logstash

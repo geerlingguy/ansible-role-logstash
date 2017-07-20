@@ -20,6 +20,10 @@ test_version_installed() {
   assert_equals "$expected_version" "$version_found"
 }
 
+test_check_mode_succeed() {
+  assert "sudo -u rpaulson ansible-playbook --verbose --diff -i 'localhost,' --connection=local /tmp/ansible/playbook.yml --check"
+}
+
 run_ansible() {
   assert "sudo -u rpaulson ansible-playbook --verbose --diff -i 'localhost,' --connection=local /tmp/ansible/playbook.yml"
 }

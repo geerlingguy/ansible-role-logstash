@@ -9,8 +9,11 @@
     src: logstash.repo.j2
     dest: /etc/yum.repos.d/logstash.repo
     mode: 0644
+  register: add_logstash_repository
 
 - name: Install Logstash.
   yum:
     pkg: logstash
     state: installed
+  when: not ansible_check_mode
+
