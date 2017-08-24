@@ -6,7 +6,7 @@
 
 - name: Add Logstash repository.
   apt_repository:
-    repo: 'deb {{logstash_debian_repo_version}} stable main'
+    repo: 'deb "{{logstash_debian_repo_version}}" stable main'
     state: present
 
 - name: Check if Logstash is already installed.
