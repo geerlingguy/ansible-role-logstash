@@ -16,4 +16,5 @@ logstash_enabled_on_boot: yes
 logstash_install_plugins:
   - logstash-input-beats
 
-logstash_debian_repo_version: http://packages.elasticsearch.org/logstash/2.3/debian  
+logstash_debian_repo_version: 
+  - http://packages.elasticsearch.org/logstash/2.3/debian  
