@@ -7,7 +7,9 @@ logstash_elasticsearch_hosts:
 logstash_local_syslog_path: /var/log/syslog
 logstash_monitor_local_syslog: true
 
+logstash_ssl: false
 logstash_ssl_dir: /etc/pki/logstash
+logstash_ssl_certificate_authority: ""
 logstash_ssl_certificate_file: ""
 logstash_ssl_key_file: ""
 

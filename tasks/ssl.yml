@@ -3,7 +3,7 @@
   file:
     path: "{{ logstash_ssl_dir }}"
     state: directory
-  when: logstash_ssl_key_file
+  when: logstash_ssl
 
 - name: Copy SSL key and cert for logstash-forwarder.
   copy:
@@ -13,5 +13,6 @@
   with_items:
     - "{{ logstash_ssl_key_file }}"
     - "{{ logstash_ssl_certificate_file }}"
+    - "{{ logstash_ssl_certificate_authority }}"
   notify: restart logstash
-  when: logstash_ssl_key_file
+  when: logstash_ssl
