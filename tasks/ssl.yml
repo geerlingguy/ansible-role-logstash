@@ -13,5 +13,6 @@
   with_items:
     - "{{ logstash_ssl_key_file }}"
     - "{{ logstash_ssl_certificate_file }}"
+    - "{{ logstash_ssl_certificate_authority }}"
   notify: restart logstash
   when: logstash_ssl_key_file
