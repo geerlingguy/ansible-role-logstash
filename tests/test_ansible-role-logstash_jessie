@@ -1,8 +1,15 @@
 #!/bin/bash
 
 test_logstash_is_running() {
-  run_ansible
   assert "systemctl status logstash |grep '^   Active: active (running)'" "Logstash service is not running"
+}
+
+test_idempotence() {
+  assert "sudo -u rpaulson ansible-playbook --verbose --diff -i 'localhost,' --connection=local /tmp/ansible/playbook.yml | grep -q 'changed=0.*failed=0'"
+}
+
+test_version_installed() {
+  assert_equals "$(/opt/logstash/bin/logstash --version)" "logstash 2.3.4"
 }
 
 setup_suite() {
@@ -31,3 +38,6 @@ EOF
 run_ansible() {
   assert "sudo -u rpaulson ansible-playbook --verbose --diff -i 'localhost,' --connection=local /tmp/ansible/playbook.yml"
 }
+
+run_ansible
+
