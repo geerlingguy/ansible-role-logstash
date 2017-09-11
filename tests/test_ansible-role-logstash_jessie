@@ -1,0 +1,44 @@
+#!/bin/bash
+
+test_logstash_is_running() {
+  run_ansible
+  assert "service logstash status |grep -q 'running'"
+}
+
+test_idempotence() {
+  run_ansible
+  assert "sudo -u rpaulson ansible-playbook --verbose --diff -i 'localhost,' --connection=local /tmp/ansible/playbook.yml | grep -q 'changed=0.*failed=0'"
+}
+
+test_version_installed() {
+  run_ansible
+  assert_equals "$(/opt/logstash/bin/logstash --version)" "logstash 2.3.4"
+}
+
+setup_suite() {
+  cat << EOF > /tmp/requirements.yml
+- src: geerlingguy.java
+  version: 1.7.4
+EOF
+  ansible-galaxy install -r /tmp/requirements.yml -f -p common_roles
+}
+
+setup() {
+  mkdir /tmp/ansible/group_vars -p
+
+  cat << EOF > /tmp/ansible/playbook.yml
+- hosts: all
+  pre_tasks:
+    - name: Update apt cache.
+      apt: update_cache=yes cache_valid_time=600
+      when: ansible_os_family == 'Debian'
+  roles:
+    - geerlingguy.java
+    - ansible-role-logstash
+EOF
+}
+
+run_ansible() {
+  assert "sudo -u rpaulson ansible-playbook --verbose --diff -i 'localhost,' --connection=local /tmp/ansible/playbook.yml"
+}
+
