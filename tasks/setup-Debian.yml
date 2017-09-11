@@ -1,29 +1,32 @@
 ---
 - name: Add Elasticsearch apt key.
   apt_key:
-    url: http://packages.elasticsearch.org/GPG-KEY-elasticsearch
+    url: http://packages.elastic.co/GPG-KEY-elasticsearch
     state: present
 
 - name: Add Logstash repository.
   apt_repository:
-    repo: 'deb http://packages.elasticsearch.org/logstash/2.3/debian stable main'
+    repo: 'deb http://packages.elasticsearch.org/logstash/{{ logstash_version }}/debian stable main'
     state: present
 
 - name: Check if Logstash is already installed.
-  stat: path=/etc/init.d/logstash
+  stat:
+    path: /etc/init.d/logstash
   register: logstash_installed
 
 - name: Update apt cache if repository just added.
-  apt: update_cache=yes
+  apt:
+    update_cache: yes
   when: logstash_installed.stat.exists == false
 
 - name: Install Logstash.
-  apt: pkg=logstash state=present
+  apt:
+    pkg: logstash
+    state: present
 
 - name: Add Logstash user to adm group (Debian).
   user:
     name: logstash
     group: logstash
     groups: adm
-  when: ansible_os_family == "Debian"
   notify: restart logstash
