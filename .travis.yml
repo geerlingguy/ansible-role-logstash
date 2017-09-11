@@ -6,6 +6,7 @@ dist: trusty
 script:
   # Run tests.
   - ${PWD}/tests/run_tests_jessie.sh -v
+  - ${PWD}/tests/run_tests_centos6.sh -v
 
 #notifications:
 #  webhooks: https://galaxy.ansible.com/api/v1/notifications/
