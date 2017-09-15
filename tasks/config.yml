@@ -24,6 +24,7 @@
     - 12-apache.conf
     - 14-solr.conf
     - 15-drupal.conf
+  when: logstash_install_filters
   notify: restart logstash
 
 - name: Create Logstash configuration file for local syslog.
