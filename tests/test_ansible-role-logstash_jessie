@@ -53,9 +53,7 @@ setup_suite() {
     - role: ansible-role-logstash
 EOF
 
-[ "*el_2" == $(basename $0) ] && echo 2.X && cat << EOF >> /tmp/ansible/playbook.yml
-      logstash_version: 2.3
-EOF
+[ -f logstash_version ] && echo '      logstash_version: "$(cat extra_parameters)"' >> /tmp/ansible/playbook.yml
 
   run_ansible
 
