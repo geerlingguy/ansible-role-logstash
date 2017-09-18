@@ -5,13 +5,10 @@
     state: present
 
 - name: Add Logstash repository.
-  yum_repository:
-    name: logstash-{{ logstash_version }}
-    description: Logstash repository for {{ logstash_version }}.x packages
-    baseurl: http://packages.elastic.co/logstash/{{ logstash_version }}/centos
-    gpgcheck: yes
-    gpgkey: http://packages.elastic.co/GPG-KEY-elasticsearch
-    enabled: yes
+  template:
+    src: logstash.repo.j2
+    dest: /etc/yum.repos.d/logstash.repo
+    mode: 0644
 
 - name: Install Logstash.
   yum:

@@ -3,10 +3,16 @@ services: docker
 
 dist: trusty
 
+env:
+  - TEST_SUITE=jessie LOGSTASH_VERSION=5.6.0
+  - TEST_SUITE=centos6 LOGSTASH_VERSION=5.6.0
+  - TEST_SUITE=jessie LOGSTASH_VERSION=2.3
+  - TEST_SUITE=centos6 LOGSTASH_VERSION=2.3
+
 script:
   # Run tests.
-  - ${PWD}/tests/run_tests_jessie.sh -v
-  - ${PWD}/tests/run_tests_centos6.sh -v
+  - bash -c 'echo ${LOGSTASH_VERSION} > ${PWD}/tests/logstash_version'
+  - ${PWD}/tests/run_tests_${TEST_SUITE}.sh -v
 
 #notifications:
 #  webhooks: https://galaxy.ansible.com/api/v1/notifications/

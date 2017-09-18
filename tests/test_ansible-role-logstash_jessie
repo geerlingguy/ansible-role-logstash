@@ -1,44 +1,63 @@
 #!/bin/bash
 
 test_logstash_is_running() {
-  run_ansible
-  assert "service logstash status |grep -q 'running'"
+  running=1
+  grep -q Debian /etc/issue && (service logstash status |grep -q 'running') && running=$?
+  grep -q CentOS /etc/issue && (initctl list |grep -q logstash) && (initctl status logstash |grep -q 'start/running') && running=$?
+  grep -q CentOS /etc/issue && test -x /etc/init.d/logstash && (/etc/init.d/logstash status |grep -q 'running') && running=$?
+  assert "test $running -eq 0"
 }
 
 test_idempotence() {
-  run_ansible
   assert "sudo -u rpaulson ansible-playbook --verbose --diff -i 'localhost,' --connection=local /tmp/ansible/playbook.yml | grep -q 'changed=0.*failed=0'"
 }
 
 test_version_installed() {
-  run_ansible
-  assert_equals "$(/opt/logstash/bin/logstash --version)" "logstash 2.3.4"
-}
-
-setup_suite() {
-  cat << EOF > /tmp/requirements.yml
-- src: geerlingguy.java
-  version: 1.7.4
-EOF
-  ansible-galaxy install -r /tmp/requirements.yml -f -p common_roles
-}
-
-setup() {
-  mkdir /tmp/ansible/group_vars -p
-
-  cat << EOF > /tmp/ansible/playbook.yml
-- hosts: all
-  pre_tasks:
-    - name: Update apt cache.
-      apt: update_cache=yes cache_valid_time=600
-      when: ansible_os_family == 'Debian'
-  roles:
-    - geerlingguy.java
-    - ansible-role-logstash
-EOF
+  version_found=0
+  expected_version=tbd
+  [ -x /opt/logstash/bin/logstash ] && expected_version="logstash 2.3.4" && version_found="$(/opt/logstash/bin/logstash --version)"
+  [ -x /usr/share/logstash/bin/logstash ] && expected_version="logstash 5.6.0" && version_found="$(/usr/share/logstash/bin/logstash --version)"
+  assert_equals "$expected_version" "$version_found"
 }
 
 run_ansible() {
   assert "sudo -u rpaulson ansible-playbook --verbose --diff -i 'localhost,' --connection=local /tmp/ansible/playbook.yml"
 }
+
+setup_suite() {
+
+  mkdir /tmp/ansible/group_vars -p
+
+  cat << EOF > /tmp/ansible/playbook.yml
+- hosts: all
+  pre_tasks:
+    - name: Add backports
+      apt_repository:
+        repo: "deb http://ftp.debian.org/debian jessie-backports main"
+      when: ansible_os_family == 'Debian'
+    - name: Update apt cache.
+      apt: update_cache=yes cache_valid_time=600
+      when: ansible_os_family == 'Debian'
+    - name: Install jdk8 on Debian
+      apt:
+        name: "{{item}}"
+        default_release: jessie-backports
+      with_items:
+        - ca-certificates-java
+        - openjdk-8-jre
+      when: ansible_os_family == 'Debian'
+    - name: Install jdk8 on RedHat
+      yum:
+        name: java-1.8.0-openjdk-devel
+      when: ansible_os_family == 'RedHat'
+  roles:
+    - role: ansible-role-logstash
+EOF
+
+[ -f logstash_version ] && echo '      logstash_version: "'$(cat logstash_version)'"' >> /tmp/ansible/playbook.yml
+
+  run_ansible
+
+}
+
 
