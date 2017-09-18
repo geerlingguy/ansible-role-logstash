@@ -9,6 +9,7 @@
   with_items:
     - 01-beats-input.conf
     - 30-elasticsearch-output.conf
+  when: logstash_install_input_output
   notify: restart logstash
 
 - name: Create Logstash filters.
