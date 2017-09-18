@@ -1,18 +1,18 @@
 ---
 services: docker
 
+dist: trusty
+
 env:
-  - distro: centos7
-  - distro: ubuntu1604
-  - distro: ubuntu1404
+  - TEST_SUITE=jessie LOGSTASH_VERSION=5.6.0
+  - TEST_SUITE=centos6 LOGSTASH_VERSION=5.6.0
+  - TEST_SUITE=jessie LOGSTASH_VERSION=2.3
+  - TEST_SUITE=centos6 LOGSTASH_VERSION=2.3
 
 script:
-  # Download test shim.
-  - wget -O ${PWD}/tests/test.sh https://gist.githubusercontent.com/geerlingguy/73ef1e5ee45d8694570f334be385e181/raw/
-  - chmod +x ${PWD}/tests/test.sh
-
   # Run tests.
-  - ${PWD}/tests/test.sh
+  - bash -c 'echo ${LOGSTASH_VERSION} > ${PWD}/tests/logstash_version'
+  - ${PWD}/tests/run_tests_${TEST_SUITE}.sh -v
 
-notifications:
-  webhooks: https://galaxy.ansible.com/api/v1/notifications/
+#notifications:
+#  webhooks: https://galaxy.ansible.com/api/v1/notifications/

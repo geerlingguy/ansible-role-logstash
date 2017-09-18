@@ -1,5 +1,21 @@
 ---
+
 logstash_listen_port_beats: 5044
+
+logstash_version: "5.6.0"
+
+logstash_configuration_files:
+  - 01-beats-input.conf
+  - 30-elasticsearch-output.conf
+
+logstash_filter_files:
+  - 10-syslog.conf
+  - 11-nginx.conf
+  - 12-apache.conf
+  - 14-solr.conf
+  - 15-drupal.conf
+
+logstash_listen_port_lumberjack: 5000
 
 logstash_elasticsearch_hosts:
   - http://localhost:9200
