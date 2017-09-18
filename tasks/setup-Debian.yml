@@ -1,7 +1,7 @@
 ---
 
-- name: Add apt-transport-https package
-  package: name=apt-transport-https state=present
+- debug: var=logstash_version
+- debug: msg="{{logstash_version[0]}}"
 
 - name: Add Elasticsearch apt key.
   apt_key:

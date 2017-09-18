@@ -3,7 +3,8 @@
 test_logstash_is_running() {
   running=1
   grep -q Debian /etc/issue && (service logstash status |grep -q 'running') && running=$?
-  grep -q CentOS /etc/issue && (initctl status logstash |grep -q 'start/running') && running=$?
+  grep -q CentOS /etc/issue && (initctl list |grep -q logstash) && (initctl status logstash |grep -q 'start/running') && running=$?
+  grep -q CentOS /etc/issue && test -x /etc/init.d/logstash && (/etc/init.d/logstash status |grep -q 'running') && running=$?
   assert "test $running -eq 0"
 }
 
@@ -53,7 +54,7 @@ setup_suite() {
     - role: ansible-role-logstash
 EOF
 
-[ -f logstash_version ] && echo '      logstash_version: "$(cat extra_parameters)"' >> /tmp/ansible/playbook.yml
+[ -f logstash_version ] && echo '      logstash_version: "'$(cat logstash_version)'"' >> /tmp/ansible/playbook.yml
 
   run_ansible
 
