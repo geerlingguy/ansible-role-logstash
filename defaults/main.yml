@@ -15,3 +15,6 @@ logstash_enabled_on_boot: yes
 
 logstash_install_plugins:
   - logstash-input-beats
+
+logstash_elasticsearch_index: "%{[@metadata][beat]}-%{+YYYY.MM.dd}"
+logstash_elasticsearch_manage_template: false

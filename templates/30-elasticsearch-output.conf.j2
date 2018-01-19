@@ -5,7 +5,8 @@ output {
     user => "{{ logstash_elasticsearch_user }}"
     password => "{{ logstash_elasticsearch_password }}"
 {% endif %}
-    index => "%{[@metadata][beat]}-%{+YYYY.MM.dd}"
+    index => "{{ logstash_elasticsearch_index }}"
+    manage_template => "{{ logstash_elasticsearch_manage_template | json }}"
     document_type => "%{[@metadata][type]}"
   }
 }
