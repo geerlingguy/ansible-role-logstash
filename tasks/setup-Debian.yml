@@ -2,9 +2,6 @@
 - name: Install apt-transport-https.
   apt: pkg=apt-transport-https state=present
 
-- name: Install default java jre.
-  apt: pkg=default-jre state=present
-
 - name: Add Elasticsearch apt key.
   apt_key:
     url: https://artifacts.elastic.co/GPG-KEY-elasticsearch
