@@ -22,7 +22,6 @@
     - 10-syslog.conf
     - 11-nginx.conf
     - 12-apache.conf
-    - 14-solr.conf
     - 15-drupal.conf
   notify: restart logstash
 
