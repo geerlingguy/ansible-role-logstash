@@ -11,4 +11,4 @@
     mode: 0644
 
 - name: Install Logstash.
-  yum: pkg=logstash state=installed
+  yum: pkg=logstash state=present
