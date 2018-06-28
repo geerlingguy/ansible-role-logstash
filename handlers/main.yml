@@ -1,3 +1,8 @@
 ---
 - name: restart logstash
   service: name=logstash state=restarted
+
+- name: reload logstash
+  shell: /usr/bin/pkill -HUP -u logstash
+  failed_when: false
+

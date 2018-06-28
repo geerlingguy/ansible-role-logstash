@@ -1,44 +1,74 @@
 ---
 - name: Create Logstash configuration files.
   template:
-    src: "{{ item }}.j2"
-    dest: "/etc/logstash/conf.d/{{ item }}"
+    src: "{{ item }}"
+    dest: "{{ logstash_config_dir }}/conf.d/{{ item | basename | regex_replace('\\.j2$') }}"
     owner: root
     group: root
     mode: 0644
-  with_items:
-    - 01-beats-input.conf
-    - 30-elasticsearch-output.conf
-  notify: restart logstash
+  with_items: "{{ logstash_configuration_files }}"
+  notify: reload logstash
 
-- name: Create Logstash filters.
-  copy:
-    src: "filters/{{ item }}"
-    dest: "/etc/logstash/conf.d/{{ item }}"
-    owner: root
-    group: root
-    mode: 0644
-  with_items:
-    - 10-syslog.conf
-    - 11-nginx.conf
-    - 12-apache.conf
-    - 14-solr.conf
-    - 15-drupal.conf
-  notify: restart logstash
+- name: Find non-managed files in config dir
+  find:
+    paths: "{{ logstash_config_dir  }}/conf.d"
+    # Only Ansible 2.5
+    # excludes: "{{ logstash_configuration_files | map('basename') | map('regex_replace', '\\.j2$') | join(',') }}"
+  register: logstash_current_configuration_files
 
-- name: Create Logstash configuration file for local syslog.
-  template:
-    src: 02-local-syslog-input.conf.j2
-    dest: /etc/logstash/conf.d/02-local-syslog-input.conf
-    owner: root
-    group: root
-    mode: 0644
-  when: logstash_monitor_local_syslog
-  notify: restart logstash
-
-- name: Ensure configuration for local syslog is absent if disabled.
+- name: Purge non-managed files in config dir
   file:
-    path: /etc/logstash/conf.d/02-local-syslog-input.conf
+    path: "{{ logstash_config_dir  }}/conf.d/{{ item }}"
     state: absent
-  when: not logstash_monitor_local_syslog
+  # Not needed when Ansible 2.5
+  when: (item | basename) not in (logstash_configuration_files | map('basename') | map('regex_replace', '\\.j2$'))
+  with_items: "{{ logstash_current_configuration_files.files | map(attribute='path') | list }}"
+
+- name: Create custom patterns dir
+  file:
+    path: "{{ logstash_config_dir }}/conf.d/patterns"
+    state: directory
+
+- name: Create custom patterns file
+  copy:
+    src: "{{ logtash_custom_patterns_file }}"
+    dest: "{{ logstash_config_dir }}/conf.d/patterns/custom"
+    owner: root
+    group: root
+    mode: 0644
+  when: logtash_custom_patterns_file is defined
   notify: restart logstash
+
+- name: Install Logstash ES custom templates
+  copy:
+    src: "{{ item }}"
+    dest: "{{ logstash_config_dir }}/{{ item | basename }}"
+    owner: root
+    group: root
+    mode: 0644
+  with_items: "{{ logstash_es_templates }}"
+  notify: reload logstash
+
+- name: Logstash pipeline workers tunning
+  lineinfile:
+    path: "{{ logstash_config_dir }}/logstash.yml"
+    regexp: '^(# )?pipeline.workers: '
+    line: "pipeline.workers: {{logstash_pipeline_workers}}"
+  when: not ansible_check_mode and logstash_pipeline_workers is defined
+  notify: reload logstash
+
+- name: Logstash pipeline batch size tunning
+  lineinfile:
+    path: "{{ logstash_config_dir }}/logstash.yml"
+    regexp: '^(# )?pipeline.batch.size: '
+    line: "pipeline.batch.size: {{logstash_pipeline_batch_size}}"
+  when: not ansible_check_mode and logstash_pipeline_batch_size is defined
+  notify: reload logstash
+
+- name: Logstash pipeline batch delay tunning
+  lineinfile:
+    path: "{{ logstash_config_dir }}/logstash.yml"
+    regexp: '^(# )?pipeline.batch.delay: '
+    line: "pipeline.batch.delay: {{logstash_pipeline_batch_delay}}"
+  when: not ansible_check_mode and logstash_pipeline_batch_delay is defined
+  notify: reload logstash

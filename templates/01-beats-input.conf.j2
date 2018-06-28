@@ -1,11 +1,14 @@
 input {
   beats {
     port => {{ logstash_listen_port_beats }}
-{% if logstash_ssl_certificate_file and logstash_ssl_key_file %}
+{% if logstash_ssl_certificate_file != "" and logstash_ssl_key_file != "" %}
     ssl => true
+{% if logstash_ssl_ca_file != "" %}
+    ssl_certificate_authorities => ["{{ logstash_ssl_dir }}/{{ logstash_ssl_ca_file }}"]
+{% endif %}
     ssl_certificate => "{{ logstash_ssl_dir }}/{{ logstash_ssl_certificate_file | basename }}"
     ssl_key => "{{ logstash_ssl_dir }}/{{ logstash_ssl_key_file | basename }}"
-    ssl_verify_mode => "force_peer"
+    ssl_verify_mode => "{{ logstash_ssl_verify_mode }}"
 {% endif %}
   }
 }

@@ -1,17 +1,37 @@
 ---
+
 - name: Ensure Logstash SSL key pair directory exists.
   file:
     path: "{{ logstash_ssl_dir }}"
     state: directory
-  when: logstash_ssl_key_file
 
-- name: Copy SSL key and cert for logstash-forwarder.
+- name: Copy SSL certificate
   copy:
-    src: "{{ item }}"
-    dest: "{{ logstash_ssl_dir }}/{{ item | basename }}"
+    content: "{{logstash_ssl_certificate}}"
+    dest: "{{logstash_ssl_dir}}/{{logstash_ssl_certificate_file}}"
     mode: 0644
-  with_items:
-    - "{{ logstash_ssl_key_file }}"
-    - "{{ logstash_ssl_certificate_file }}"
+    owner: logstash
+    group: logstash
+  when: logstash_ssl_certificate_file != ""
   notify: restart logstash
-  when: logstash_ssl_key_file
+
+- name: Copy SSL certificate key
+  copy:
+    content: "{{logstash_ssl_key}}"
+    dest: "{{logstash_ssl_dir}}/{{logstash_ssl_key_file}}"
+    mode: 0600
+    owner: logstash
+    group: logstash
+  no_log: true
+  when: logstash_ssl_key_file != ""
+  notify: restart logstash
+
+- name: Copy SSL CA certificate
+  copy:
+    content: "{{logstash_ssl_ca}}"
+    dest: "{{logstash_ssl_dir}}/{{logstash_ssl_ca_file}}"
+    mode: 0600
+    owner: logstash
+    group: logstash
+  when: logstash_ssl_ca_file != ""
+  notify: restart logstash

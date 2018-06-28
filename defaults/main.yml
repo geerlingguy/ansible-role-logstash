@@ -1,4 +1,11 @@
 ---
+logstash_config_dir: /etc/logstash
+# Old 2.x repo"
+# logstash_repo: "deb http://packages.elasticsearch.org/logstash/2.3/debian stable main"
+# New 5.x repo
+logstash_repo: "deb https://artifacts.elastic.co/packages/5.x/apt stable main"
+logstash_apt_key: "http://packages.elasticsearch.org/GPG-KEY-elasticsearch"
+
 logstash_listen_port_beats: 5044
 
 logstash_elasticsearch_hosts:
@@ -10,8 +17,28 @@ logstash_monitor_local_syslog: true
 logstash_ssl_dir: /etc/pki/logstash
 logstash_ssl_certificate_file: ""
 logstash_ssl_key_file: ""
+logstash_ssl_ca_file: ""
+logstash_ssl_verify_mode: "none"
 
 logstash_enabled_on_boot: yes
 
 logstash_install_plugins:
   - logstash-input-beats
+
+logstash_es_templates: {}
+
+# logstash performance tunning: https://www.elastic.co/guide/en/logstash/current/tuning-logstash.html
+#logstash_pipeline_batch_size: 150
+#logstash_pipeline_batch_delay: 10
+#logstash_pipeline_workers:
+
+logstash_configuration_files:
+  - 01-beats-input.conf.j2
+  - 30-elasticsearch-output.conf.j2
+  - filters/10-syslog.conf
+  - filters/11-nginx.conf
+  - filters/12-apache.conf
+  - filters/14-solr.conf
+  - filters/15-drupal.conf
+
+#logtash_custom_patterns_file: custom-patterns
