@@ -11,9 +11,9 @@
     - 30-elasticsearch-output.conf
   notify: restart logstash
 
-- name: Create Logstash filters.
+- name: Load logstash configuration.
   copy:
-    src: "filters/conf.d"
+    src: "conf.d"
     dest: "/etc/logstash/conf.d/"
     owner: root
     group: root
