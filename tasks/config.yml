@@ -13,9 +13,13 @@
 
 - name: Load logstash configuration.
   copy:
-    src: "conf"
-    dest: "/etc/logstash/conf.d/"
+    src: "conf/{{ item }}"
+    dest: "/etc/logstash/conf.d/{{ item }}"
     owner: root
     group: root
     mode: 0644
+  with_items:
+    - patterns
+    - templates
+    - 10-filter.conf
   notify: restart logstash
