@@ -24,7 +24,7 @@
 
 - name: Install Logstash.
   package:
-    name: "logstash={{logstash_version}}"
+    name: "logstash=1:{{logstash_version}}-1"
     state: present
 
 - name: Add Logstash user to adm group (Debian).
