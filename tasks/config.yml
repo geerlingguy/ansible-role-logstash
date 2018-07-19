@@ -13,7 +13,7 @@
 
 - name: Load logstash configuration.
   copy:
-    src: "conf.d"
+    src: "conf"
     dest: "/etc/logstash/conf.d/"
     owner: root
     group: root
