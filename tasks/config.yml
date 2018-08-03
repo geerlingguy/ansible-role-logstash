@@ -14,7 +14,7 @@
 - name: Load logstash configuration.
   copy:
     src: "conf/{{ item }}"
-    dest: "/etc/logstash/conf.d/{{ item }}"
+    dest: "/etc/logstash/conf.d/"
     owner: root
     group: root
     mode: 0644
