@@ -1,13 +1,18 @@
 ---
+- name: Ensure dependency is installed (Ubuntu).
+  apt: name=apt-transport-https state=present
+
 - name: Add Elasticsearch apt key.
   apt_key:
-    url: http://packages.elasticsearch.org/GPG-KEY-elasticsearch
+    url: https://artifacts.elastic.co/GPG-KEY-elasticsearch
     state: present
 
 - name: Add Logstash repository.
   apt_repository:
-    repo: 'deb http://packages.elasticsearch.org/logstash/2.3/debian stable main'
+    repo: 'deb https://artifacts.elastic.co/packages/{{ logstash_major_version }}/apt stable main'
     state: present
+    update_cache: yes
+
 
 - name: Check if Logstash is already installed.
   stat: path=/etc/init.d/logstash
@@ -18,7 +23,9 @@
   when: logstash_installed.stat.exists == false
 
 - name: Install Logstash.
-  apt: pkg=logstash state=present
+  package:
+    name: "logstash=1:{{logstash_version}}-1"
+    state: present
 
 - name: Add Logstash user to adm group (Debian).
   user:

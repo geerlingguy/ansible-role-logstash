@@ -1,7 +1,13 @@
 output {
   elasticsearch {
     hosts => {{ logstash_elasticsearch_hosts | to_json }}
-    index => "%{[@metadata][beat]}-%{+YYYY.MM.dd}"
+    index => "{{ logstash_output_index_name }}-%{+YYYY.MM.dd}"
+    manage_template => true
+    template => ["/etc/logstash/conf.d/templates/oio-template.conf"]
+    template_name => ["oio-template"]
+    template_overwrite => true
     document_type => "%{[@metadata][type]}"
+    user => logstash
+    password => logstash
   }
 }

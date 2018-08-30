@@ -11,34 +11,15 @@
     - 30-elasticsearch-output.conf
   notify: restart logstash
 
-- name: Create Logstash filters.
+- name: Load logstash configuration.
   copy:
-    src: "filters/{{ item }}"
-    dest: "/etc/logstash/conf.d/{{ item }}"
+    src: "conf/{{ item }}"
+    dest: "/etc/logstash/conf.d/"
     owner: root
     group: root
     mode: 0644
   with_items:
-    - 10-syslog.conf
-    - 11-nginx.conf
-    - 12-apache.conf
-    - 14-solr.conf
-    - 15-drupal.conf
-  notify: restart logstash
-
-- name: Create Logstash configuration file for local syslog.
-  template:
-    src: 02-local-syslog-input.conf.j2
-    dest: /etc/logstash/conf.d/02-local-syslog-input.conf
-    owner: root
-    group: root
-    mode: 0644
-  when: logstash_monitor_local_syslog
-  notify: restart logstash
-
-- name: Ensure configuration for local syslog is absent if disabled.
-  file:
-    path: /etc/logstash/conf.d/02-local-syslog-input.conf
-    state: absent
-  when: not logstash_monitor_local_syslog
+    - patterns
+    - templates
+    - 10-filter.conf
   notify: restart logstash

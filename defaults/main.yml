@@ -1,11 +1,15 @@
 ---
+logstash_version: "6.2.4"
+logstash_major_version: "6.x"
+
 logstash_listen_port_beats: 5044
 
 logstash_elasticsearch_hosts:
   - http://localhost:9200
 
-logstash_local_syslog_path: /var/log/syslog
-logstash_monitor_local_syslog: true
+logstash_local_syslog_path: /var/log/logstash
+
+
 
 logstash_ssl_dir: /etc/pki/logstash
 logstash_ssl_certificate_file: ""
@@ -15,3 +19,5 @@ logstash_enabled_on_boot: yes
 
 logstash_install_plugins:
   - logstash-input-beats
+
+logstash_output_index_name: "oio"
