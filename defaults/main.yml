@@ -11,7 +11,7 @@ logstash_ssl_dir: /etc/pki/logstash
 logstash_ssl_certificate_file: ""
 logstash_ssl_key_file: ""
 
-logstash_enabled_on_boot: yes
+logstash_enabled_on_boot: true
 
 logstash_install_plugins:
   - logstash-input-beats

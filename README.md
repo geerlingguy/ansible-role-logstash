@@ -42,9 +42,9 @@ Note that filebeat and logstash may not work correctly with self-signed certific
 
 Whether configuration for local syslog file (defined as `logstash_local_syslog_path`) should be added to logstash. Set this to `false` if you are monitoring the local syslog differently, or if you don't care about the local syslog file. Other local logs can be added by your own configuration files placed inside `/etc/logstash/conf.d`.
 
-    logstash_enabled_on_boot: yes
+    logstash_enabled_on_boot: true
 
-Set this to `no` if you don't want logstash to run on system startup.
+Set this to `false` if you don't want logstash to run on system startup.
 
     logstash_install_plugins:
       - logstash-input-beats
