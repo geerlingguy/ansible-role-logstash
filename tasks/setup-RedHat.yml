@@ -5,8 +5,8 @@
     state: present
 
 - name: Add Logstash repository.
-  copy:
-    src: logstash.repo
+  template:
+    src: logstash.repo.j2
     dest: /etc/yum.repos.d/logstash.repo
     mode: 0644
 

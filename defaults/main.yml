@@ -1,4 +1,6 @@
 ---
+logstash_major_version: "6.x"
+
 logstash_listen_port_beats: 5044
 
 logstash_elasticsearch_hosts:

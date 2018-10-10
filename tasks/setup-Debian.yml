@@ -1,12 +1,12 @@
 ---
 - name: Add Elasticsearch apt key.
   apt_key:
-    url: http://packages.elasticsearch.org/GPG-KEY-elasticsearch
+    url: https://artifacts.elastic.co/GPG-KEY-elasticsearch
     state: present
 
 - name: Add Logstash repository.
   apt_repository:
-    repo: 'deb http://packages.elasticsearch.org/logstash/2.3/debian stable main'
+    repo: 'deb https://artifacts.elastic.co/packages/{{ logstash_major_version }}/apt stable main'
     state: present
 
 - name: Check if Logstash is already installed.
