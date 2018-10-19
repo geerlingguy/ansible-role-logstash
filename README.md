@@ -46,6 +46,10 @@ Whether configuration for local syslog file (defined as `logstash_local_syslog_p
 
 Set this to `false` if you don't want logstash to run on system startup.
 
+    logstash_install_default_filters: true
+
+True if you want the filters provided in `files/filters` to be installed, false otherwise.
+
     logstash_install_plugins:
       - logstash-input-beats
 
