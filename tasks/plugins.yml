@@ -1,15 +1,19 @@
 ---
+- name: Get logstash-plugin location
+  command: >
+    find / -name "logstash-plugin"
+  register: logstash_plugin_location
+  changed_when: false
+
 - name: Get list of installed plugins.
   command: >
-    ./bin/logstash-plugin list
-    chdir=/opt/logstash
+    {{ logstash_plugin_location.stdout }} list
   register: logstash_plugins_list
   changed_when: false
 
 - name: Install configured plugins.
   command: >
-    ./bin/logstash-plugin install {{ item }}
-    chdir=/opt/logstash
+    {{ logstash_plugin_location.stdout }} install {{ item }}
   with_items: "{{ logstash_install_plugins }}"
   when: "item not in logstash_plugins_list.stdout"
   notify: restart logstash
