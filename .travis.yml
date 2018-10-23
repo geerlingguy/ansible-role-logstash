@@ -7,7 +7,7 @@ env:
     - ROLE_NAME: logstash
   matrix:
     - MOLECULE_DISTRO: centos7
-    - MOLECULE_DISTRO: ubuntu1604
+    - MOLECULE_DISTRO: ubuntu1804
 
 install:
   # Install test dependencies.
