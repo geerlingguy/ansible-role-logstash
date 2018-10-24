@@ -11,6 +11,12 @@
       apt: update_cache=true cache_valid_time=600
       when: ansible_os_family == 'Debian'
 
+    - name: Use Java 8 on Debian/Ubuntu.
+      set_fact:
+        java_packages:
+          - openjdk-8-jdk
+      when: ansible_os_family == 'Debian'
+
   roles:
     - geerlingguy.java
     - geerlingguy.elasticsearch

@@ -1,4 +1,6 @@
 ---
+logstash_version: '6.x'
+
 logstash_listen_port_beats: 5044
 
 logstash_elasticsearch_hosts:
@@ -6,6 +8,8 @@ logstash_elasticsearch_hosts:
 
 logstash_local_syslog_path: /var/log/syslog
 logstash_monitor_local_syslog: true
+
+logstash_dir: /usr/share/logstash
 
 logstash_ssl_dir: /etc/pki/logstash
 logstash_ssl_certificate_file: ""
