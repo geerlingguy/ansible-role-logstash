@@ -1,0 +1,2 @@
+---
+java: "{% if es_java is defined %}{{es_java}}{% else %}openjdk-8-jre-headless{% endif %}"
