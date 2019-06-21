@@ -1,6 +1,9 @@
 ---
 logstash_version: '6.x'
 
+logstash_java_install: True
+update_java: True
+
 logstash_listen_port_beats: 5044
 
 logstash_elasticsearch_hosts:

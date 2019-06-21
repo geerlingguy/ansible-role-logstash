@@ -1,4 +1,13 @@
 ---
+- name: os-specific vars
+  include_vars: "{{ansible_os_family}}.yml"
+
+- name: include java.yml
+  include: java.yml
+  when: logstash_java_install | bool
+  tags:
+      - java
+
 - name: Include OS Specific setup tasks
   include: setup-{{ ansible_os_family }}.yml
 
