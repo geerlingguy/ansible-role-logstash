@@ -1,17 +1,48 @@
 ---
-- name: Ensure Logstash SSL key pair directory exists.
+- local_action: stat path="{{ role_path }}/files/{{ logstash_ssl_key_file }}"
+  register: logstash_keyfile
+
+- local_action: stat path="{{ role_path }}/files/{{ logstash_ssl_certificate_file }}"
+  register: logstash_crtfile
+
+- local_action: stat path="{{ role_path }}/files/{{ logstash_ssl_certificate_authority }}"
+  register: logstash_cafile
+
+- name: Ensure Logstash SSL directory exists.
   file:
     path: "{{ logstash_ssl_dir }}"
     state: directory
-  when: logstash_ssl_key_file | bool
+    owner: "logstash"
+    group: "logstash"
+    mode: 0700
+  when: (logstash_keyfile.stat.exists|bool and logstash_keyfile.stat.isreg|bool) or (logstash_crtfile.stat.exists|bool and logstash_crtfile.stat.isreg|bool) or (logstash_cafile.stat.exists|bool and logstash_cafile.stat.isreg|bool)
 
-- name: Copy SSL key and cert for logstash-forwarder.
+- name: Upload client SSL key for logstash-forwarder.
   copy:
-    src: "{{ item }}"
-    dest: "{{ logstash_ssl_dir }}/{{ item | basename }}"
-    mode: 0644
-  with_items:
-    - "{{ logstash_ssl_key_file }}"
-    - "{{ logstash_ssl_certificate_file }}"
+    src: "{{ logstash_ssl_key_file }}"
+    dest: "{{ logstash_ssl_dir }}/{{ logstash_ssl_key_file | basename }}"
+    mode: 0600
+    owner: "logstash"
+    group: "logstash"
+  when: logstash_keyfile.stat.exists|bool and logstash_keyfile.stat.isreg|bool
   notify: restart logstash
-  when: logstash_ssl_key_file | bool
+
+- name: Upload client SSL certificate for logstash-forwarder.
+  copy:
+    src: "{{ logstash_ssl_certificate_file }}"
+    dest: "{{ logstash_ssl_dir }}/{{ logstash_ssl_certificate_file | basename }}"
+    mode: 0600
+    owner: "logstash"
+    group: "logstash"
+  when: logstash_crtfile.stat.exists|bool and logstash_crtfile.stat.isreg|bool
+  notify: restart logstash
+
+- name: Upload local certificate authority file
+  copy:
+    src: "{{ logstash_ssl_certificate_authority }}"
+    dest: "{{ logstash_ssl_dir }}/{{ logstash_ssl_certificate_authority | basename }}"
+    mode: 0600
+    owner: "logstash"
+    group: "logstash"
+  notify: restart logstash
+  when: logstash_cafile.stat.exists|bool and logstash_cafile.stat.isreg|bool

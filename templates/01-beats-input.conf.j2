@@ -1,11 +1,20 @@
 input {
   beats {
     port => {{ logstash_listen_port_beats }}
-{% if logstash_ssl_certificate_file and logstash_ssl_key_file %}
+{% if logstash_es_use_ssl|bool %}
     ssl => true
+{% endif %}
+{% if logstash_crtfile.stat.exists|bool and logstash_crtfile.stat.isreg|bool %}
     ssl_certificate => "{{ logstash_ssl_dir }}/{{ logstash_ssl_certificate_file | basename }}"
+{% endif %}
+{% if logstash_keyfile.stat.exists|bool and logstash_keyfile.stat.isreg|bool %}
     ssl_key => "{{ logstash_ssl_dir }}/{{ logstash_ssl_key_file | basename }}"
-    ssl_verify_mode => "force_peer"
+{% endif %}
+{% if logstash_cafile.stat.exists|bool and logstash_cafile.stat.isreg|bool %}
+    ssl_certificate_authorities => ["{{ logstash_ssl_dir }}/{{ logstash_ssl_certificate_authority | basename}}"]
+{% endif %}
+{% if logstash_es_insecure_ssl %}
+    ssl_verify_mode => "none"
 {% endif %}
   }
 }

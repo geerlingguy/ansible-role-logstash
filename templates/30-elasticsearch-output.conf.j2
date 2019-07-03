@@ -1,7 +1,42 @@
 output {
-  elasticsearch {
-    hosts => {{ logstash_elasticsearch_hosts | to_json }}
-    index => "%{[@metadata][beat]}-%{+YYYY.MM.dd}"
-    document_type => "%{[@metadata][type]}"
+  if [@metadata][pipeline] {
+    elasticsearch {
+      hosts => {{ logstash_elasticsearch_hosts | to_json }}
+      manage_template => false
+      index => "%{[@metadata][beat]}-%{+YYYY.MM.dd}"
+      document_type => "%{[@metadata][type]}"
+      pipeline => "%{[@metadata][pipeline]}"
+{% if logstash_es_user|length>0 %}
+      user => "{{ logstash_es_user }}"
+{% endif %}
+{% if logstash_es_pass|length>0 %}
+      password => "{{ logstash_es_pass }}"
+{% endif %}
+{% if logstash_es_use_ssl|bool %}
+      ssl => true
+{% endif %}
+{% if logstash_cafile.stat.exists|bool and logstash_cafile.stat.isreg|bool %}
+      cacert => "{{ logstash_ssl_dir }}/{{ logstash_ssl_certificate_authority | basename }}"
+{% endif %}
+    }
+  } else {
+    elasticsearch {
+      manage_template => false
+      hosts => {{ logstash_elasticsearch_hosts | to_json }}
+      index => "%{[@metadata][beat]}-%{+YYYY.MM.dd}"
+      document_type => "%{[@metadata][type]}"
+{% if logstash_es_user|length>0 %}
+      user => "{{ logstash_es_user }}"
+{% endif %}
+{% if logstash_es_pass|length>0 %}
+      password => "{{ logstash_es_pass }}"
+{% endif %}
+{% if logstash_es_use_ssl|bool %}
+      ssl => true
+{% endif %}
+{% if logstash_cafile.stat.exists|bool and logstash_cafile.stat.isreg|bool %}
+      cacert => "{{ logstash_ssl_dir }}/{{ logstash_ssl_certificate_authority | basename }}"
+{% endif %}
+    }
   }
 }

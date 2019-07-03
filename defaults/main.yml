@@ -6,19 +6,34 @@ update_java: True
 
 logstash_listen_port_beats: 5044
 
-logstash_elasticsearch_hosts:
-  - http://localhost:9200
-
 logstash_local_syslog_path: /var/log/syslog
 logstash_monitor_local_syslog: true
-
-logstash_dir: /usr/share/logstash
-
-logstash_ssl_dir: /etc/pki/logstash
-logstash_ssl_certificate_file: ""
-logstash_ssl_key_file: ""
 
 logstash_enabled_on_boot: true
 
 logstash_install_plugins:
   - logstash-input-beats
+
+logstash_dir: /usr/share/logstash
+
+# Options for how logstash connects to elasticsearch
+logstash_elasticsearch_hosts:
+  - http://localhost:9200
+
+# Whether to use HTTP basic-auth when connect to ES
+logstash_es_user:
+logstash_es_pass:
+
+# Whether to use SSL when conenct to ES
+logstash_es_use_ssl: false
+logstash_es_insecure_ssl: false
+
+# Options for logstash's own SSL client certificate
+logstash_ssl_dir: /etc/pki/logstash
+logstash_ssl_certificate_file:
+logstash_ssl_certificate_authority:
+
+# Note that logstash wants a PK8 format key file!
+# Convert from PEM with this command:
+#     openssl pkcs8 -inform pem -in your.key -nocrypt -topk8 -out your.pk8
+logstash_ssl_key_file:
