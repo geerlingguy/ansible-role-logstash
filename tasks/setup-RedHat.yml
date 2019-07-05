@@ -14,3 +14,8 @@
   package:
     name: logstash
     state: present
+
+- name: Install systemd service file
+  command: /usr/share/logstash/bin/system-install
+  args:
+    creates: /etc/systemd/system/logstash.service
