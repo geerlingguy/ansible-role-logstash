@@ -56,6 +56,7 @@ Set this to `false` if you don't want logstash to run on system startup.
 
     logstash_install_plugins:
       - logstash-input-beats
+      - logstash-filter-multiline
 
 A list of Logstash plugins that should be installed.
 
