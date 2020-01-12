@@ -14,6 +14,10 @@ Though other methods are possible, this role is made to work with Elasticsearch 
 
 Available variables are listed below, along with default values (see `defaults/main.yml`):
 
+    logstash_version: '7.x'
+
+The major version of Logstash to install.
+
     logstash_listen_port_beats: 5044
 
 The port over which Logstash will listen for beats.
