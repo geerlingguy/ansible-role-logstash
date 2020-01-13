@@ -5,8 +5,8 @@ input {
     ssl => true
     ssl_certificate => "{{ logstash_ssl_dir }}/{{ logstash_ssl_certificate_file | basename }}"
     ssl_key => "{{ logstash_ssl_dir }}/{{ logstash_ssl_key_file | basename }}"
-    ssl_verify_mode => "force_peer"
-    ssl_certificate_authorities => '<%=options[:ssl_certificate]%>'
+    ssl_verify_mode => "peer"
+    ssl_certificate_authorities => "{{ logstash_ssl_dir }}/{{ logstash_ssl_certificate_file | basename }}"
 {% endif %}
   }
 }
