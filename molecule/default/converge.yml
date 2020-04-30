@@ -20,4 +20,4 @@
   roles:
     - geerlingguy.java
     - geerlingguy.elasticsearch
-    - geerlingguy.logstash
+    - vahubert.logstash
