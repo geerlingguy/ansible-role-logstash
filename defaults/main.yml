@@ -20,3 +20,5 @@ logstash_enabled_on_boot: true
 logstash_install_plugins:
   - logstash-input-beats
   - logstash-filter-multiline
+
+logstash_apt_repo: deb https://artifacts.elastic.co/packages/{{ logstash_version }}/apt stable main
