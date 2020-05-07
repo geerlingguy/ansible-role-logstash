@@ -28,6 +28,13 @@
   apt:
     name: logstash
     state: present
+  when: logstash_package_version == ''
+
+- name: Install specific Logstash package version.
+  apt: 
+    name: "logstash={{ logstash_package_version }}"
+    state: present
+  when: logstash_package_version != ''
 
 - name: Add Logstash user to adm group (Debian).
   user:

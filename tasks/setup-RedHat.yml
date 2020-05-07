@@ -14,3 +14,10 @@
   package:
     name: logstash
     state: present
+  when: logstash_package_version == ''
+
+- name: Install specific Logstash version.
+  package:
+    name: "logstash-{{ logstash_package_version }}"
+    state: present
+  when: logstash_package_version != ''
