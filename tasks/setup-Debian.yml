@@ -25,9 +25,9 @@
   when: not logstash_installed.stat.exists
 
 - name: Install Logstash.
-  apt:
-    name: logstash
-    state: present
+  package:
+    name: "{{ logstash_package }}"
+    state: "{{ logstash_package_state }}"
 
 - name: Add Logstash user to adm group (Debian).
   user:

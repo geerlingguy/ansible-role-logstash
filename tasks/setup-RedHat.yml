@@ -12,5 +12,5 @@
 
 - name: Install Logstash.
   package:
-    name: logstash
-    state: present
+    name: "{{ logstash_package }}"
+    state: "{{ logstash_package_state }}"

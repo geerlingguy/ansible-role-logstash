@@ -1,6 +1,9 @@
 ---
 logstash_version: '7.x'
 
+logstash_package: logstash
+logstash_package_state: present
+
 logstash_listen_port_beats: 5044
 
 logstash_elasticsearch_hosts:
