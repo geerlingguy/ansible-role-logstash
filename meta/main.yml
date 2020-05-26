@@ -2,11 +2,12 @@
 dependencies: []
 
 galaxy_info:
+  role_name: logstash
   author: geerlingguy
   description: Logstash for Linux.
   company: "Midwestern Mac, LLC"
   license: "license (BSD, MIT)"
-  min_ansible_version: 1.8
+  min_ansible_version: 2.4
   platforms:
     - name: EL
       versions:
