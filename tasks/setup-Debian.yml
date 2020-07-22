@@ -15,14 +15,7 @@
   apt_repository:
     repo: 'deb https://artifacts.elastic.co/packages/{{ logstash_version }}/apt stable main'
     state: present
-
-- name: Check if Logstash is already installed.
-  stat: path=/etc/init.d/logstash
-  register: logstash_installed
-
-- name: Update apt cache if repository just added.
-  apt: update_cache=yes
-  when: not logstash_installed.stat.exists
+    update_cache: true
 
 - name: Install Logstash.
   apt:
