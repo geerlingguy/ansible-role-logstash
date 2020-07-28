@@ -1,0 +1,20 @@
+---
+- name: cleanup
+  gather_facts: false
+  hosts: all
+  tasks:
+    - name: Check if host to clean up is available
+      wait_for_connection:
+        # connect_timeout defaults to 5 seconds, so setting
+        # timeout to less than that should give one connection attempt
+        timeout: 1
+      register: wait_result
+      ignore_errors: true
+
+    - name: Unregister system if available
+      include_role:
+        name: nycrecords.rhsm
+      vars:
+        rhsm_username: "{{ omit }}"
+        rhsm_unregister: true
+      when: wait_result is success

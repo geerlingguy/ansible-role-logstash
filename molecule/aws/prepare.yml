@@ -1,0 +1,9 @@
+---
+- name: Prepare
+  hosts: all
+  gather_facts: false
+  become: true
+
+  tasks:
+    - name: Generate Yum metadata cache
+      command: yum makecache

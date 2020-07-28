@@ -4,20 +4,29 @@
   become: true
 
   vars:
-    logstash_enabled_on_boot: false
+    # Role: rhsm
+    rhsm_username: "{{ lookup('env', 'RHSM_USERNAME') }}"
+    rhsm_password: "{{ lookup('env', 'RHSM_PASSWORD') }}"
+    rhsm_auto_attach: true
+    rhsm_server_proxy_hostname: "{{ lookup('env', 'http_proxy_hostname') }}"
+    rhsm_server_proxy_port: "{{ lookup('env', 'http_proxy_port') }}"
+    rhsm_server_proxy_user: "{{ lookup('env', 'http_proxy_user') }}"
+    rhsm_server_proxy_password: "{{ lookup('env', 'http_proxy_password') }}"
+    rhsm_consumer_name: "nycrecords_{{ '%Y%m%d_%H%M%s' | strftime(ansible_date_time.epoch) }}"
 
-  pre_tasks:
-    - name: Update apt cache.
-      apt: update_cache=true cache_valid_time=600
-      when: ansible_os_family == 'Debian'
+    # Role: java
+    java_home: /usr/lib/jvm/java-1.8.0-openjdk-1.8.0.262.b10-0.el7_8.x86_64/jre/bin/java
 
-    - name: Use Java 8 on Debian/Ubuntu.
-      set_fact:
-        java_packages:
-          - openjdk-8-jdk
-      when: ansible_os_family == 'Debian'
+    # Role: ElasticSearch
+    elasticsearch_heap_size_min: 128m
+    elasticsearch_heap_size_max: 128m
+    elasticsearch_discovery_type: single-node
+
+    # Role: LogStash
+    logstash_enabled_on_boot: true
 
   roles:
-    - geerlingguy.java
-    - geerlingguy.elasticsearch
-    - geerlingguy.logstash
+    - role: nycrecords.rhsm
+    - role: nycrecords.java
+    - role: nycrecords.elasticsearch
+    - role: ansible-role-logstash

@@ -1,0 +1,22 @@
+---
+- name: Converge
+  hosts: all
+  become: true
+
+  vars:
+    # Role: yum_config_manager
+    repositories:
+      enabled:
+        - rhui-REGION-rhel-server-rhscl
+        - rhui-REGION-rhel-server-debug-rhscl
+    # Role: java
+    java_home: /usr/lib/jvm/java-1.8.0-openjdk.x86_64
+    
+    # Role: ElasticSearch
+    elasticsearch_discovery_type: single-node
+
+  roles:
+    - role: nycrecords.yum_config_manager
+    - role: nycrecords.java
+    - role: ansible-role-elasticsearch
+    - role: ansible-role-logstash

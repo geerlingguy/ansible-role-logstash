@@ -3,9 +3,9 @@ dependencies: []
 
 galaxy_info:
   role_name: logstash
-  author: geerlingguy
+  author: nycrecords
   description: Logstash for Linux.
-  company: "Midwestern Mac, LLC"
+  company: "City of New York, NYC Department of Records"
   license: "license (BSD, MIT)"
   min_ansible_version: 2.4
   platforms:

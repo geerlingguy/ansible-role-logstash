@@ -2,24 +2,18 @@
 dependency:
   name: galaxy
 driver:
-  name: vagrant
-  provider:
-    name: virtualbox
-lint:
-  name: yamllint
+  name: ec2
 platforms:
   - name: instance
-    box: ${VAGRANT_DEFAULT_BOX:-generic/rhel7}
-    # instance_raw_config_args:
-    #   - "vm.network 'forwarded_port', guest: 80, host: 8080"
-    #   - "vm.network 'forwarded_port', guest: 9200, host: 9201"
-    #   - "vm.network 'forwarded_port', guest: 5601, host: 5602"
+    image: ami-000db10762d0c4c05
+    instance_type: t2.large
+    vpc_subnet_id: subnet-38a38302
     groups:
       - elasticsearch
 provisioner:
   name: ansible
-  lint:
-    name: ansible-lint
+  connection_options:
+    ansible_user: ec2-user
   playbooks:
     converge: converge.yml
     cleanup: cleanup.yml
@@ -33,6 +27,6 @@ provisioner:
         server_key: ../resources/instance/instance.key
 verifier:
   name: testinfra
+  options:
+    verbose: true
   directory: ../resources/tests/
-  lint:
-    name: flake8
