@@ -1,5 +1,6 @@
 ---
 logstash_version: '7.x'
+logstash_apt_mirror: https://artifacts.elastic.co/packages/
 
 logstash_listen_port_beats: 5044
 
@@ -23,3 +24,4 @@ logstash_install_plugins:
 
 logstash_heap_size_min: 1g
 logstash_heap_size_max: 1g
+

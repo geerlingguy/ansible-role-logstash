@@ -13,7 +13,7 @@
 
 - name: Add Logstash repository.
   apt_repository:
-    repo: 'deb https://artifacts.elastic.co/packages/{{ logstash_version }}/apt stable main'
+    repo: 'deb {{ logstash_apt_mirror }}{{ logstash_version }}/apt stable main'
     state: present
     update_cache: true
 
