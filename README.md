@@ -1,6 +1,6 @@
 # Ansible Role: Logstash
 
-[![Build Status](https://travis-ci.com/geerlingguy/ansible-role-logstash.svg?branch=master)](https://travis-ci.com/geerlingguy/ansible-role-logstash)
+[![CI](https://github.com/geerlingguy/ansible-role-logstash/workflows/CI/badge.svg?event=push)](https://github.com/geerlingguy/ansible-role-logstash/actions?query=workflow%3ACI)
 
 An Ansible Role that installs Logstash on RedHat/CentOS Debian/Ubuntu.
 
