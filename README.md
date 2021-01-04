@@ -54,6 +54,21 @@ Set this to `false` if you don't want logstash to run on system startup.
 
 A list of Logstash plugins that should be installed.
 
+    logstash_config_templates:
+      - 01-beats-input
+      - 30-elasticsearch-output
+
+A list of Logstash configurations based on templates that should be copied.
+
+    logstash_config_filters:
+      - 10-syslog
+      - 11-nginx
+      - 12-apache
+      - 14-solr
+      - 15-drupal
+
+A list of static Logstash filter configurations that should be copied.
+
 ## Generating a Self-signed certificate
 
 For utmost security, you should use your own valid certificate and keyfile, and update the `logstash_ssl_*` variables in your playbook to use your certificate.

@@ -20,3 +20,14 @@ logstash_enabled_on_boot: true
 logstash_install_plugins:
   - logstash-input-beats
   - logstash-filter-multiline
+
+logstash_config_templates:
+  - 01-beats-input
+  - 30-elasticsearch-output
+
+logstash_config_filters:
+  - 10-syslog
+  - 11-nginx
+  - 12-apache
+  - 14-solr
+  - 15-drupal
