@@ -5,7 +5,6 @@
       - apt-transport-https
       - gnupg2
     state: present
-  when: logstash_manage_repo
 
 - name: Add Elasticsearch apt key.
   apt_key:
