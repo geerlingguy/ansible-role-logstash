@@ -1,5 +1,6 @@
 ---
 logstash_version: '7.x'
+logstash_manage_repo: true
 
 logstash_listen_port_beats: 5044
 
