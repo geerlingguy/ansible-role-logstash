@@ -14,3 +14,9 @@
   package:
     name: logstash
     state: present
+
+# https://discuss.elastic.co/t/logstash-service-unit-not-found-centos-7/138446
+- name: Add Logstash systemd unit file
+  command:
+    cmd: "{{ logstash_dir }}/bin/system-install /etc/logstash/startup.options systemd"
+    creates: /etc/systemd/system/logstash.service
