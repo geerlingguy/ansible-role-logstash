@@ -20,3 +20,4 @@
   command:
     cmd: "{{ logstash_dir }}/bin/system-install /etc/logstash/startup.options systemd"
     creates: /etc/systemd/system/logstash.service
+  when: ansible_distribution == 'CentOS' and ansible_distribution_major_version == '7'
