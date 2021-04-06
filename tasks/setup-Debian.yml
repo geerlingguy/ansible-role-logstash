@@ -10,12 +10,14 @@
   apt_key:
     url: https://artifacts.elastic.co/GPG-KEY-elasticsearch
     state: present
+  when: logstash_manage_repo
 
 - name: Add Logstash repository.
   apt_repository:
     repo: 'deb https://artifacts.elastic.co/packages/{{ logstash_version }}/apt stable main'
     state: present
     update_cache: true
+  when: logstash_manage_repo
 
 - name: Install Logstash.
   apt:

@@ -3,12 +3,14 @@
   rpm_key:
     key: https://artifacts.elastic.co/GPG-KEY-elasticsearch
     state: present
+  when: logstash_manage_repo
 
 - name: Add Logstash repository.
   template:
     src: logstash.repo.j2
     dest: /etc/yum.repos.d/logstash.repo
     mode: 0644
+  when: logstash_manage_repo
 
 - name: Install Logstash.
   package:
