@@ -18,6 +18,10 @@ Available variables are listed below, along with default values (see `defaults/m
 
 The major version of Logstash to install.
 
+    logstash_package: logstash
+
+The specific package to be installed. You can specify a version of the package using the correct syntax for your platform and package manager by changing the package name.
+
     logstash_listen_port_beats: 5044
 
 The port over which Logstash will listen for beats.
