@@ -58,6 +58,20 @@ Set this to `false` if you don't want logstash to run on system startup.
 
 A list of Logstash plugins that should be installed.
 
+
+logstash_configuration_files:
+  - etc/logstash/conf.d/01-beats-input.conf
+  - etc/logstash/conf.d/10-syslog.conf
+  - etc/logstash/conf.d/11-nginx.conf
+  - etc/logstash/conf.d/12-apache.conf
+  - etc/logstash/conf.d/14-solr.conf
+  - etc/logstash/conf.d/15-drupal.conf
+  - etc/logstash/conf.d/30-elasticsearch-output.conf
+  - "{{playbook_dir}}/path/to/16-another-filter.conf"
+
+List of inputs/filters/outputs (configuration files) to install. 
+You can specify your own configuration files in another location (see example with playbook_dir variable).
+
 ## Generating a Self-signed certificate
 
 For utmost security, you should use your own valid certificate and keyfile, and update the `logstash_ssl_*` variables in your playbook to use your certificate.
@@ -82,14 +96,14 @@ If you are seeing high CPU usage from one of the `logstash` processes, and you'r
 ## Example Playbook
 
     - hosts: search
-    
+
       pre_tasks:
         - name: Use Java 8 on Debian/Ubuntu.
           set_fact:
             java_packages:
               - openjdk-8-jdk
           when: ansible_os_family == 'Debian'
-    
+
       roles:
         - geerlingguy.java
         - geerlingguy.elasticsearch
