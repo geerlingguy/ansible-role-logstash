@@ -58,6 +58,10 @@ Set this to `false` if you don't want logstash to run on system startup.
 
 A list of Logstash plugins that should be installed.
 
+    logstash_setup_default_config
+
+Set this to `false` if you don't want to add the default config. You can add your own configuration files inside `/etc/logstash/conf.d` in a more specific role.
+
 ## Generating a Self-signed certificate
 
 For utmost security, you should use your own valid certificate and keyfile, and update the `logstash_ssl_*` variables in your playbook to use your certificate.

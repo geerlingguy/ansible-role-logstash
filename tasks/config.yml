@@ -9,6 +9,7 @@
   with_items:
     - 01-beats-input.conf
     - 30-elasticsearch-output.conf
+  when: logstash_setup_default_config
   notify: restart logstash
 
 - name: Create Logstash filters.
@@ -24,6 +25,7 @@
     - 12-apache.conf
     - 14-solr.conf
     - 15-drupal.conf
+  when: logstash_setup_default_config
   notify: restart logstash
 
 - name: Create Logstash configuration file for local syslog.
