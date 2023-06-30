@@ -24,3 +24,7 @@ logstash_install_plugins:
   - logstash-filter-multiline
 
 logstash_setup_default_config: true
+
+logstash_set_java_heap: false
+logstash_init_heap: 2G
+logstash_max_heap: 2G

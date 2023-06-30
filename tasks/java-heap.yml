@@ -1,0 +1,16 @@
+---
+- name: Set Java Min Heap Size
+  ansible.builtin.lineinfile:
+    path: /etc/logstash/jvm.options
+    regexp: '^-Xms'
+    line: -Xms{{ logstash_init_heap }}
+  when: logstash_set_java_heap
+  notify: restart logstash
+
+- name: Set Java Max Heap Size
+  ansible.builtin.lineinfile:
+    path: /etc/logstash/jvm.options
+    regexp: '^-Xmx'
+    line: -Xmx{{ logstash_max_heap }}
+  when: logstash_set_java_heap
+  notify: restart logstash

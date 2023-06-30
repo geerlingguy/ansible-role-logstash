@@ -48,6 +48,12 @@ See [Generating a self-signed certificate](#generating-a-self-signed-certificate
 
 Whether configuration for local syslog file (defined as `logstash_local_syslog_path`) should be added to logstash. Set this to `false` if you are monitoring the local syslog differently, or if you don't care about the local syslog file. Other local logs can be added by your own configuration files placed inside `/etc/logstash/conf.d`.
 
+    logstash_set_java_heap: false
+    logstash_init_heap: 2G
+    logstash_max_heap: 2G
+
+The heap size which Logstash can use.
+
     logstash_enabled_on_boot: true
 
 Set this to `false` if you don't want logstash to run on system startup.
