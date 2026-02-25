@@ -18,6 +18,10 @@
     enabled: true
     signed_by: "{{ logstash_apt_url_elasticsearch_pubkey }}"
 
+- name: Update apt cache.
+  ansible.builtin.apt:
+    update_cache: yes
+
 - name: Install Logstash.
   apt:
     name: '{{ logstash_package }}'
