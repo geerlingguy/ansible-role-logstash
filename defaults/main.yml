@@ -1,5 +1,9 @@
 ---
-logstash_version: '7.x'
+
+logstash_apt_url_elasticsearch_pubkey: https://artifacts.elastic.co/GPG-KEY-elasticsearch
+logstash_apt_base_url_elasticsearch: https://artifacts.elastic.co/packages
+
+logstash_version: '9.x'
 
 logstash_package: logstash
 

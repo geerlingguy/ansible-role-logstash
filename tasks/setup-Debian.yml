@@ -6,16 +6,17 @@
       - gnupg2
     state: present
 
-- name: Add Elasticsearch apt key.
-  apt_key:
-    url: https://artifacts.elastic.co/GPG-KEY-elasticsearch
+- name: Add elasticsearch repo
+  ansible.builtin.deb822_repository:
+    name: elasticsearch
+    types: deb
+    uris: "{{logstash_apt_base_url_elasticsearch}}/{{ logstash_version }}/apt"
+    components: main
+    suites: stable
     state: present
-
-- name: Add Logstash repository.
-  apt_repository:
-    repo: 'deb https://artifacts.elastic.co/packages/{{ logstash_version }}/apt stable main'
-    state: present
-    update_cache: true
+    architectures: amd64
+    enabled: true
+    signed_by: "{{ logstash_apt_url_elasticsearch_pubkey }}"
 
 - name: Install Logstash.
   apt:
